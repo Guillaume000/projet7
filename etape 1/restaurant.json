@@ -1,0 +1,53 @@
+[
+    {
+        "restaurantName":"Bronco",
+        "address":"39 Rue des Petites Écuries, 75010 Paris",
+        "lat":48.8737815,
+        "long":2.3501649,
+        "pic":"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=48.8737815,2.3501649&fov=90&heading=235&pitch=10",
+        "ratings":[
+            {
+                "stars":4,
+                "comment":"Un excellent restaurant, j'y reviendrai ! Par contre il vaut mieux aimer la viande."
+            },
+            {
+                "stars":5,
+                "comment":"Tout simplement mon restaurant préféré !"
+            }
+        ]
+    },
+    {
+        "restaurantName":"Babalou",
+        "address":"4 Rue Lamarck, 75018 Paris",
+        "lat":48.8865035,
+        "long":2.3442197,
+        "pic":"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=48.8865035,2.3442197&fov=90&heading=235&pitch=10",
+        "ratings":[
+            {
+                "stars":5,
+                "comment":"Une minuscule pizzeria délicieuse cachée juste à côté du Sacré choeur !"
+            },
+            {
+                "stars":3,
+                "comment":"J'ai trouvé ça correct, sans plus"
+            }
+        ]
+    },
+    {
+        "restaurantName":"Le Lamarck",
+        "address":"8 Rue Lamarck, 75018 Paris",
+        "lat":48.8864925,
+        "long":2.3421403,
+        "pic":"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=48.8864925,2.3421403&fov=90&heading=235&pitch=10",
+        "ratings":[
+            {
+                "stars":3,
+                "comment":"Nous étions situés près des vitres et nous sentions l'air frais malgré les radiateurs, dommage... !"
+            },
+            {
+                "stars":3,
+                "comment":"Classique et Authentique"
+            }
+        ]
+    }
+]
