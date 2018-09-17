@@ -100,12 +100,60 @@ class Maps {
                   <div id="collapse${index}" class="collapse" aria-labelledby="heading${index}" data-parent="#restaurantAccordion">
                     <div id="info${index}" class="card-body">
                       ${infoWindows[index].content}
+                      <button type="button" class="btn btn-info review" data-toggle="modal" data-target="#exampleModal${index}">Ajouter un avis</button>
+                      <div class="modal fade" id="exampleModal${index}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel${index}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel${index}">Modal title</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
             `);
         });
         return template;
+    }
+    
+    addReview() {
+        $('.modal-body').append(`
+<form>
+
+<div class="rating">
+    <input type="radio" name="star" id="star1"><label for="star1"></label>
+    <input type="radio" name="star" id="star2"><label for="star2"></label>
+    <input type="radio" name="star" id="star3"><label for="star3"></label>
+    <input type="radio" name="star" id="star4"><label for="star4"></label>
+    <input type="radio" name="star" id="star5"><label for="star5"></label>
+</div>
+
+<div class="form-group">
+<label for="exampleFormControlSelect1">Example select</label>
+<select class="form-control" id="exampleFormControlSelect1">
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="exampleFormControlTextarea1">Example textarea</label>
+<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+</div>
+</form>`);
     }
 }
 
@@ -128,5 +176,7 @@ function initMap() {
         map.addListener('click', function(event) {
             readMap.addMarker(event.latLng, map);
         });
+        
+        readMap.addReview();
     });
 }
