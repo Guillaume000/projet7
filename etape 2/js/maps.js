@@ -100,20 +100,20 @@ class Maps {
                   <div id="collapse${index}" class="collapse" aria-labelledby="heading${index}" data-parent="#restaurantAccordion">
                     <div id="info${index}" class="card-body">
                       ${infoWindows[index].content}
-                      <button type="button" class="btn btn-info review" data-toggle="modal" data-target="#exampleModal${index}">Ajouter un avis</button>
-                      <div class="modal fade" id="exampleModal${index}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel${index}" aria-hidden="true">
+                      <button type="button" class="btn btn-info review" data-toggle="modal" data-target="#modal${index}">Ajouter un avis</button>
+                      <div class="modal fade" id="modal${index}" tabindex="-1" role="dialog" aria-labelledby="modalLabel${index}" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel${index}">Modal title</h5>
+                              <h5 class="modal-title" id="modalLabel${index}">Ajouter un avis</h5>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                               </button>
                             </div>
                             <div class="modal-body"></div>
                             <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Save changes</button>
+                              <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                              <button type="button" id="review${index}" class="btn btn-success" data-dismiss="modal">Ajouter</button>
                             </div>
                           </div>
                         </div>
@@ -126,34 +126,82 @@ class Maps {
         return template;
     }
     
-    addReview() {
+    addReview() {   
+        let idReview;
+        
+        //vérifier le CSS
+        
+        //Faire un compteur pour les id du textarea et du bouton valider
+        $.each(this.restaurants, function (index, value) {
+            idReview = index;
+        });
+        
         $('.modal-body').append(`
-<form>
+          <form>
+            <div class='rating-stars text-center'>
+              <ul id='stars'>
+                <li class='star' data-value='1'>
+                  <i class='fa fa-star fa-fw'></i>
+                </li>
+                <li class='star' data-value='2'>
+                  <i class='fa fa-star fa-fw'></i>
+                </li>
+                <li class='star' data-value='3'>
+                  <i class='fa fa-star fa-fw'></i>
+                </li>
+                <li class='star' data-value='4'>
+                  <i class='fa fa-star fa-fw'></i>
+                </li>
+                <li class='star' data-value='5'>
+                  <i class='fa fa-star fa-fw'></i>
+                </li>
+              </ul>
+            </div>
 
-<div class="rating">
-    <input type="radio" name="star" id="star1"><label for="star1"></label>
-    <input type="radio" name="star" id="star2"><label for="star2"></label>
-    <input type="radio" name="star" id="star3"><label for="star3"></label>
-    <input type="radio" name="star" id="star4"><label for="star4"></label>
-    <input type="radio" name="star" id="star5"><label for="star5"></label>
-</div>
+            <div class="form-group">
+              <label for="formControlTextarea${idReview}">Commentaire :</label>
+              <textarea class="form-control" id="formControlTextarea${idReview}" rows="3"></textarea>
+            </div>
+          </form>
+        `);
+        
+        $('#stars li').on('mouseover', function() {
+            const onStar = parseInt($(this).data('value'), 10);
 
-<div class="form-group">
-<label for="exampleFormControlSelect1">Example select</label>
-<select class="form-control" id="exampleFormControlSelect1">
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
-<option>5</option>
-</select>
-</div>
+            $(this).parent().children('li.star').each(function(e) {
+                if (e < onStar) {
+                    $(this).addClass('hover');
+                }
+                else {
+                    $(this).removeClass('hover');
+                }
+            });
 
-<div class="form-group">
-<label for="exampleFormControlTextarea1">Example textarea</label>
-<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-</div>
-</form>`);
+        }).on('mouseout', function() {
+            $(this).parent().children('li.star').each(function(e) {
+                $(this).removeClass('hover');
+            });
+        });
+
+        $('#stars li').on('click', function() {
+            const onStar = parseInt($(this).data('value'), 10);
+            const stars = $(this).parent().children('li.star');
+
+            for(let i = 0; i < stars.length; i++) {
+                $(stars[i]).removeClass('selected');
+            }
+
+            for(let j = 0; j < onStar; j++) {
+                $(stars[j]).addClass('selected');
+            }
+            
+            /*console.log($(`#review${idReview}`));
+            
+            $(`#review${idReview}`).click(function() {
+                console.log(onStar);
+                console.log($(`#formControlTextarea${idReview}`).val());
+            });*/
+        });
     }
 }
 
