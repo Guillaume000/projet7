@@ -52,8 +52,8 @@ class Maps {
 
             for(let i = 0; i < value.ratings.length; i++) {
                 (function(i) {
-                    contentString += (`<ul><li>Notes : ${value.ratings[i].stars}</li>
-                                       <li>Commentaires : ${value.ratings[i].comment}</li></ul>`);
+                    contentString += (`<ul><li>Note : ${value.ratings[i].stars}</li>
+                                       <li>Commentaire : ${value.ratings[i].comment}</li></ul>`);
                 })(i)
             }
             array.push(contentString);
@@ -110,7 +110,12 @@ class Maps {
                                 <span aria-hidden="true">&times;</span>
                               </button>
                             </div>
-                            <div class="modal-body"></div>
+                            <div class="modal-body">
+                              <div class="form-group">
+                                <label for="formControlTextarea${index}">Commentaire :</label>
+                                <textarea class="form-control" id="formControlTextarea${index}" rows="3"></textarea>
+                              </div>
+                            </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
                               <button type="button" id="review${index}" class="btn btn-success" data-dismiss="modal">Ajouter</button>
@@ -126,44 +131,34 @@ class Maps {
         return template;
     }
     
-    addReview() {   
-        let idReview;
-        
-        //vérifier le CSS
-        
-        //Faire un compteur pour les id du textarea et du bouton valider
-        $.each(this.restaurants, function (index, value) {
-            idReview = index;
-        });
-        
+    addForm() {
         $('.modal-body').append(`
-          <form>
-            <div class='rating-stars text-center'>
-              <ul id='stars'>
-                <li class='star' data-value='1'>
-                  <i class='fa fa-star fa-fw'></i>
-                </li>
-                <li class='star' data-value='2'>
-                  <i class='fa fa-star fa-fw'></i>
-                </li>
-                <li class='star' data-value='3'>
-                  <i class='fa fa-star fa-fw'></i>
-                </li>
-                <li class='star' data-value='4'>
-                  <i class='fa fa-star fa-fw'></i>
-                </li>
-                <li class='star' data-value='5'>
-                  <i class='fa fa-star fa-fw'></i>
-                </li>
-              </ul>
-            </div>
-
-            <div class="form-group">
-              <label for="formControlTextarea${idReview}">Commentaire :</label>
-              <textarea class="form-control" id="formControlTextarea${idReview}" rows="3"></textarea>
-            </div>
-          </form>
+            <form>
+              <div class='rating-stars text-center'>
+                <ul id='stars'>
+                  <li class='star' data-value='1'>
+                    <i class='fa fa-star fa-fw'></i>
+                  </li>
+                  <li class='star' data-value='2'>
+                    <i class='fa fa-star fa-fw'></i>
+                  </li>
+                  <li class='star' data-value='3'>
+                    <i class='fa fa-star fa-fw'></i>
+                  </li>
+                  <li class='star' data-value='4'>
+                    <i class='fa fa-star fa-fw'></i>
+                  </li>
+                  <li class='star' data-value='5'>
+                    <i class='fa fa-star fa-fw'></i>
+                  </li>
+                </ul>
+              </div>
+            </form>
         `);
+    }
+    
+    addReview() {      
+        const rate = [];
         
         $('#stars li').on('mouseover', function() {
             const onStar = parseInt($(this).data('value'), 10);
@@ -182,7 +177,7 @@ class Maps {
                 $(this).removeClass('hover');
             });
         });
-
+        
         $('#stars li').on('click', function() {
             const onStar = parseInt($(this).data('value'), 10);
             const stars = $(this).parent().children('li.star');
@@ -195,13 +190,19 @@ class Maps {
                 $(stars[j]).addClass('selected');
             }
             
-            /*console.log($(`#review${idReview}`));
+            rate.push(onStar);
             
-            $(`#review${idReview}`).click(function() {
-                console.log(onStar);
-                console.log($(`#formControlTextarea${idReview}`).val());
-            });*/
+            if(rate.length > 1) {
+                rate.shift();
+            }
         });
+        
+        for(let k = 0; k < this.markers.length; k++) {
+            $(`#review${k}`).click(function() {
+                const comment = $(`#formControlTextarea${k}`).val();
+                $(`#info${k} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
+            });
+        }
     }
 }
 
@@ -225,6 +226,7 @@ function initMap() {
             readMap.addMarker(event.latLng, map);
         });
         
+        readMap.addForm();
         readMap.addReview();
     });
 }

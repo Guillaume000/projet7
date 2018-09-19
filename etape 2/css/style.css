@@ -32,74 +32,15 @@ ul {
     text-align: center;
 }
 
-.clearfix {
-    clear:both;
-}
-
-.text-center {text-align:center;}
-
-a {
-    color: tomato;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #2196f3;
-}
-
-pre {
-    display: block;
-    padding: 9.5px;
-    margin: 0 0 10px;
-    font-size: 13px;
-    line-height: 1.42857143;
-    color: #333;
-    word-break: break-all;
-    word-wrap: break-word;
-    background-color: #F5F5F5;
-    border: 1px solid #CCC;
-    border-radius: 4px;
-}
-
-.header {
-    padding:20px 0;
-    position:relative;
-    margin-bottom:10px;
-
-}
-
-.header:after {
-    content:"";
-    display:block;
-    height:1px;
-    background:#eee;
-    position:absolute; 
-    left:30%; right:30%;
-}
-
-.header h2 {
-    font-size:3em;
-    font-weight:300;
-    margin-bottom:0.2em;
-}
-
-.header p {
-    font-size:14px;
-}
-
-#a-footer {
-    margin: 20px 0;
-}
-
 .rating-stars ul {
     list-style-type:none;
     padding:0;
     -moz-user-select:none;
     -webkit-user-select:none;
 }
+
 .rating-stars ul > li.star {
     display:inline-block;
-
 }
 
 .rating-stars ul > li.star > i.fa {
