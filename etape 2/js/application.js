@@ -55,6 +55,8 @@ class Application {
 
                         map.createMarkers(markers);
                         map.displayInfoWindow();
+                        map.addForm();
+                        map.addReview();
                     }
                 }
             });

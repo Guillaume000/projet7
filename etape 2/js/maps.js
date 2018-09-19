@@ -197,7 +197,7 @@ class Maps {
             }
         });
         
-        for(let k = 0; k < this.markers.length; k++) {
+        for(let k = 0; k < this.restaurants.length; k++) {
             $(`#review${k}`).click(function() {
                 const comment = $(`#formControlTextarea${k}`).val();
                 $(`#info${k} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
