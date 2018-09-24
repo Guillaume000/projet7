@@ -211,8 +211,10 @@ class Maps {
     }
 }
 
+let map;
+let infowindow;
+
 function initMap() {
-    let map;
     const paris = new google.maps.LatLng(48.8589507, 2.2770201);
     const app = new Application('restaurant.json');
 
@@ -220,6 +222,16 @@ function initMap() {
         center: paris,
         zoom: 12
     });
+    
+    infowindow = new google.maps.InfoWindow();
+    const service = new google.maps.places.PlacesService(map);
+    service.nearbySearch({
+        location: paris,
+        radius: 10000,
+        type: ['restaurant']
+    }, callback);
+    
+    
 
     document.addEventListener("restaurantLoaded", () => {
         const readMap = new Maps(app.listRestaurants);
@@ -235,3 +247,26 @@ function initMap() {
         readMap.addReview();
     });
 }
+
+function callback(results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+        for (let i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+        }
+    }
+}
+
+function createMarker(place) {
+    const placeLoc = place.geometry.location;
+    const marker = new google.maps.Marker({
+        map: map,
+        position: place.geometry.location
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.setContent(place.name);
+        infowindow.open(map, this);
+    });
+}
+
+
