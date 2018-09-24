@@ -1,0 +1,61 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.table {
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.restaurant {
+    cursor: pointer;
+    color: #007bff;
+}
+
+#map {
+    height: 100%;
+}
+
+#info {
+    width: 20%;
+    text-align: center;
+}
+
+#amount {
+    text-align: center;
+}
+
+.rating-stars ul {
+    list-style-type:none;
+    padding:0;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+}
+
+.rating-stars ul > li.star {
+    display:inline-block;
+}
+
+.rating-stars ul > li.star > i.fa {
+    font-size:2.5em;
+    color:#ccc;
+}
+
+.rating-stars ul > li.star.hover > i.fa {
+    color:#FFCC36;
+}
+
+.rating-stars ul > li.star.selected > i.fa {
+    color:#FF912C;
+}
+
+
+
+

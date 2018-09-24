@@ -1,0 +1,104 @@
+[
+    {
+        "restaurantName":"Bronco",
+        "address":"39 Rue des Petites Écuries, 75010 Paris",
+        "lat":48.8737815,
+        "long":2.3501649,
+        "pic":"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=48.8737815,2.3501649&fov=90&heading=235&pitch=10",
+        "ratings":[
+            {
+                "stars":4,
+                "comment":"Un excellent restaurant, j'y reviendrai ! Par contre il vaut mieux aimer la viande."
+            },
+            {
+                "stars":5,
+                "comment":"Tout simplement mon restaurant préféré !"
+            }
+        ]
+    },
+    {
+        "restaurantName":"Babalou",
+        "address":"4 Rue Lamarck, 75018 Paris",
+        "lat":48.8865035,
+        "long":2.3442197,
+        "pic":"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=48.8865035,2.3442197&fov=90&heading=235&pitch=10",
+        "ratings":[
+            {
+                "stars":5,
+                "comment":"Une minuscule pizzeria délicieuse cachée juste à côté du Sacré choeur !"
+            },
+            {
+                "stars":3,
+                "comment":"J'ai trouvé ça correct, sans plus"
+            }
+        ]
+    },
+    {
+        "restaurantName":"Le Lamarck",
+        "address":"8 Rue Lamarck, 75018 Paris",
+        "lat":48.8864925,
+        "long":2.3421403,
+        "pic":"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=48.8864925,2.3421403&fov=90&heading=235&pitch=10",
+        "ratings":[
+            {
+                "stars":3,
+                "comment":"Nous étions situés près des vitres et nous sentions l'air frais malgré les radiateurs, dommage... !"
+            },
+            {
+                "stars":3,
+                "comment":"Classique et Authentique"
+            }
+        ]
+    },
+    {
+        "restaurantName":"Les Ptits Gros",
+        "address":"27 Avenue Trudaine, 75009 Paris",
+        "lat":48.8811788,
+        "long":2.3411873,
+        "pic":"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=48.8811788,2.3411873&fov=90&heading=235&pitch=10",
+        "ratings":[
+            {
+                "stars":1,
+                "comment":"Service très sympa mais alors franchement quelle honte pour une brasserie parisienne... Les planches de charcuterie et fromage qui sont finalement des planches de salade... Franchement une honte à 20€ La planche mixte, et totalement en décalage avec le positionnement convivial de l'endroit. "
+            },
+            {
+                "stars":2,
+                "comment":"Chauffage non mis a la demande alors qu'il faisais froids dehors néanmoins le café est a un prix convenable comparé a d'autres brasseries qui mettent en place un prix plus plus élevé pour un simple café"
+            }
+        ]
+    },
+    {
+        "restaurantName":"Hitomi",
+        "address":"57 Rue de Chabrol, 75010 Paris",
+        "lat":48.8772241,
+        "long":2.349237,
+        "pic":"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=48.8772241,2.349237&fov=90&heading=235&pitch=10",
+        "ratings":[
+            {
+                "stars":3,
+                "comment":"À volonté avec service à table, pas foufou mais bon quand même"
+            },
+            {
+                "stars":2,
+                "comment":"Si vous désirez manger du riz pour 12,50 ou 15,90, très bonne adresse, si vous cherchez un japonais, adresse à éviter "
+            }
+        ]
+    },
+    {
+        "restaurantName":"Les Arlots",
+        "address":"136 Rue du Faubourg Poissonnière, 75010 Paris",
+        "lat":48.8806109,
+        "long":2.3478315,
+        "pic":"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=48.8806109,2.3478315&fov=90&heading=235&pitch=10",
+        "ratings":[
+            {
+                "stars":5,
+                "comment":"Heureux d'avoir écouter les recommandations d'un ami pour ce resto ! Super expérience culinaire ! A refaire !"
+            },
+            {
+                "stars":5,
+                "comment":"Un de mes restos préférés ! Il m'a fait aimer les ris de veau, ce n'est pas rien. Super sélection de vin et une cuisine inventive, étonnante, excellente. Merci Tristan et Thomas !"
+            }
+        ]
+    }
+]
