@@ -198,8 +198,13 @@ class Maps {
         });
         
         for(let k = 0; k < this.restaurants.length; k++) {
-            $(`#review${k}`).click(function() {
+            $(`#review${k}`).click(() => {
                 const comment = $(`#formControlTextarea${k}`).val();
+                const json = `{"stars":${rate}, "comment":"${comment}"}`;
+                let object;
+                
+                object = JSON.parse(json);
+                this.restaurants[k].ratings.push(object);
                 $(`#info${k} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
             });
         }

@@ -20,6 +20,6 @@ class Restaurant {
 
         this.starsAverage = stockRate.reduce(reducer) / totalRate;
 
-        return this.starsAverage;
+        return Math.round(this.starsAverage);
     }
 }
