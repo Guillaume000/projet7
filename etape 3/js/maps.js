@@ -24,7 +24,7 @@ class Maps {
             position: location,
             map: map
         });
-        markers.push(marker);
+        this.markers.push(marker);
     }
 
     setMapOnAll(map) {
@@ -213,6 +213,8 @@ class Maps {
 
 let map;
 let infowindow;
+let service;
+let request;
 
 function initMap() {
     const paris = new google.maps.LatLng(48.8589507, 2.2770201);
@@ -224,14 +226,13 @@ function initMap() {
     });
     
     infowindow = new google.maps.InfoWindow();
-    const service = new google.maps.places.PlacesService(map);
+    service = new google.maps.places.PlacesService(map);
+    
     service.nearbySearch({
         location: paris,
         radius: 10000,
         type: ['restaurant']
     }, callback);
-    
-    
 
     document.addEventListener("restaurantLoaded", () => {
         const readMap = new Maps(app.listRestaurants);
@@ -260,12 +261,29 @@ function createMarker(place) {
     const placeLoc = place.geometry.location;
     const marker = new google.maps.Marker({
         map: map,
-        position: place.geometry.location
+        position: placeLoc
     });
-
-    google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent(place.name);
-        infowindow.open(map, this);
+    
+    var request = {
+        placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4',
+        fields: ['name', 'rating', 'formatted_phone_number', 'geometry', 'review']
+    }
+    
+    //console.log(place.reviews);
+    
+    service.getDetails(request, function(place, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+            console.log(place.reviews);
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(`${place.icon}<br>
+Nom du restaurant: ${place.name}<br> 
+Adresse: ${place.vicinity}<br>
+Note: ${place.rating}<br>
+Commentaires: ${place.reviews}`);
+                infowindow.open(map, this);
+                //$(`#collapse${index}`).collapse('toggle');
+            });
+        }
     });
 }
 
