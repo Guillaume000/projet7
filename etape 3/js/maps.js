@@ -264,7 +264,7 @@ function createMarker(place) {
         position: placeLoc
     });
     
-    var request = {
+    const request = {
         placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4',
         fields: ['name', 'rating', 'formatted_phone_number', 'geometry', 'review']
     }
@@ -274,16 +274,19 @@ function createMarker(place) {
     service.getDetails(request, function(place, status) {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
             console.log(place.reviews);
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent(`${place.icon}<br>
-Nom du restaurant: ${place.name}<br> 
-Adresse: ${place.vicinity}<br>
-Note: ${place.rating}<br>
-Commentaires: ${place.reviews}`);
-                infowindow.open(map, this);
-                //$(`#collapse${index}`).collapse('toggle');
-            });
+            
         }
+    });
+
+
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.setContent(`${place.icon}<br>
+                               Nom du restaurant: ${place.name}<br> 
+                               Adresse: ${place.vicinity}<br>
+                               Note: ${place.rating}<br>
+                               Commentaires: ${place.reviews}`);
+        infowindow.open(map, this);
+        //$(`#collapse${index}`).collapse('toggle');
     });
 }
 
