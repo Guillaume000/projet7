@@ -214,7 +214,6 @@ class Maps {
 let map;
 let infowindow;
 let service;
-let request;
 
 function initMap() {
     const paris = new google.maps.LatLng(48.8589507, 2.2770201);
@@ -225,14 +224,15 @@ function initMap() {
         zoom: 12
     });
     
-    infowindow = new google.maps.InfoWindow();
-    service = new google.maps.places.PlacesService(map);
-    
-    service.nearbySearch({
+    const request = {
         location: paris,
         radius: 10000,
         type: ['restaurant']
-    }, callback);
+    }
+    
+    infowindow = new google.maps.InfoWindow();
+    service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, callback);
 
     document.addEventListener("restaurantLoaded", () => {
         const readMap = new Maps(app.listRestaurants);
@@ -251,9 +251,7 @@ function initMap() {
 
 function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-        for (let i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-        }
+        results.forEach(createMarker);
     }
 }
 
@@ -261,33 +259,34 @@ function createMarker(place) {
     const placeLoc = place.geometry.location;
     const marker = new google.maps.Marker({
         map: map,
-        position: placeLoc
+        position: place.geometry.location
     });
     
-    const request = {
-        placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4',
-        fields: ['name', 'rating', 'formatted_phone_number', 'geometry', 'review']
-    }
-    
-    //console.log(place.reviews);
-    
-    service.getDetails(request, function(place, status) {
-        if (status == google.maps.places.PlacesServiceStatus.OK) {
-            console.log(place.reviews);
+    marker.addListener('click', function() {
+        const request = {
+            reference: place.reference
+        };
+        
+        service.getDetails(request, function(details, status) {
+            let contentString = "";
             
-        }
-    });
-
-
-    google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent(`${place.icon}<br>
-                               Nom du restaurant: ${place.name}<br> 
-                               Adresse: ${place.vicinity}<br>
-                               Note: ${place.rating}<br>
-                               Commentaires: ${place.reviews}`);
-        infowindow.open(map, this);
-        //$(`#collapse${index}`).collapse('toggle');
-    });
+            contentString = `<ul><li>Nom du Restaurant : ${details.name} ${details.rating}</li>
+                                 <li>${details.icon}</li>
+                                 <li>Adresse : ${details.vicinity}</li></ul>`;
+            
+            for(let i = 0; i < details.reviews.length; i++) {
+                (function(i) {
+                    contentString += (`<ul><li>Note: ${details.reviews[i].rating}</li>
+                                        <li>Commentaire: ${details.reviews[i].text}</li></ul>`);
+                })(i)
+            }
+            
+            infowindow.setContent(contentString);
+            infowindow.open(map, marker);
+        });
+    })
 }
+
+
 
 
