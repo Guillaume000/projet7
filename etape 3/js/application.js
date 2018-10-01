@@ -1,9 +1,52 @@
 class Application {
-    constructor(url) {
-        this.listRestaurants = this.getRestaurants(url);
+    constructor(map, request) {
+        this.map = map;
+        this.request = request;
+        this.service = new google.maps.places.PlacesService(this.map);
+        this.listRestaurants = this.service.nearbySearch(request, this.getRestaurantsFromPlaces.bind(this));
     }
+    
+    getRestaurantsFromPlaces(results, status) {
+        let restaurants = [];
+        
+        $.each(results, (index, value) => {
+            const restaurant = new Restaurant(value.name, value.vicinity, {"lat":value.geometry.location.lat, "lng":value.geometry.location.lng}, value.icon, value.rating);
+            
+            const request = {
+                reference: value.reference
+            };
+            
+            if(status === google.maps.places.PlacesServiceStatus.OK) {
+                //setTimeout(details, 4000); 
+                
+                this.service.getDetails(request, (details, status) => {
 
-    getRestaurants(url, ...list) {
+                    let tab = [];
+                    console.log(details);
+
+                    /*for(let i = 0; i < details.reviews.length; i++) {
+                        let rating = {"stars":details.reviews[i].rating, "comment":details.reviews[i].text};
+                        tab.push(rating);
+                    }*/
+
+                    restaurant.ratings = tab;
+                    restaurants.push(restaurant);
+                });
+            }
+  
+        });
+        
+        return restaurants;
+    }
+    
+    /*for(let i = 0; i < details.reviews.length; i++) {
+                    (function(i) {
+                        contentString += (`<ul><li>Note: ${details.reviews[i].rating}</li>
+<li>Commentaire: ${details.reviews[i].text}</li></ul>`);
+                    })(i)
+                }*/
+    
+    /*getRestaurants(url, ...list) {
         $.ajax({
             url: url,
             data: {
@@ -25,7 +68,7 @@ class Application {
             type: 'GET'
         });
         return list;
-    }
+    }*/
 
     clickStars(map, markers) {
         const list = this.listRestaurants;

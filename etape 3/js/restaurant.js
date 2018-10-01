@@ -1,11 +1,11 @@
 class Restaurant {
-    constructor(name, address, position, pic, ratings) {
+    constructor(name, address, position, pic, starsAverage) {
         this.name = name;
         this.address = address;
         this.position = position;
         this.pic = pic;
-        this.ratings = ratings;
-        this.starsAverage = 0;
+        this.ratings;
+        this.starsAverage = starsAverage;
     }
 
     sortByRating() {

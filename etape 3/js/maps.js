@@ -83,7 +83,6 @@ class Maps {
     }
 
     displayInfoWindow() {
-        let template;
         let infoWindows = this.createInfoWindow();
 
         $.each(this.restaurants, (index, value) => {
@@ -128,7 +127,6 @@ class Maps {
                 </div>
             `);
         });
-        return template;
     }
     
     addForm() {
@@ -217,18 +215,18 @@ let service;
 
 function initMap() {
     const paris = new google.maps.LatLng(48.8589507, 2.2770201);
-    const app = new Application('restaurant.json');
-
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: paris,
-        zoom: 12
-    });
-    
     const request = {
         location: paris,
         radius: 10000,
         type: ['restaurant']
     }
+    
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: paris,
+        zoom: 12
+    });
+    
+    const app = new Application(map, request);
     
     infowindow = new google.maps.InfoWindow();
     service = new google.maps.places.PlacesService(map);
@@ -267,7 +265,7 @@ function createMarker(place) {
             reference: place.reference
         };
         
-        service.getDetails(request, function(details, status) {
+        service.getDetails(request, (details, status) => {
             let contentString = "";
             
             contentString = `<ul><li>Nom du Restaurant : ${details.name} ${details.rating}</li>
@@ -284,7 +282,7 @@ function createMarker(place) {
             infowindow.setContent(contentString);
             infowindow.open(map, marker);
         });
-    })
+    });
 }
 
 
