@@ -4,7 +4,7 @@ class Maps {
         this.markers = [];
     }
 
-    createMarkers(map, markers) {
+    /*createMarkers(map, markers) {
         $.each(this.restaurants, (index, value) => {
             const marker = new google.maps.Marker({
                 position: new google.maps.LatLng(this.restaurants[index].position),
@@ -17,7 +17,7 @@ class Maps {
                 $(`#collapse${index}`).collapse('toggle');
             });
         });
-    }
+    }*/
 
     addMarker(location, map, ...markers) {
         const marker = new google.maps.Marker({
@@ -195,6 +195,8 @@ class Maps {
             }
         });
         
+        console.log(this.restaurants);
+        
         for(let k = 0; k < this.restaurants.length; k++) {
             $(`#review${k}`).click(() => {
                 const comment = $(`#formControlTextarea${k}`).val();
@@ -214,15 +216,15 @@ let infowindow;
 let service;
 
 function initMap() {
-    const paris = new google.maps.LatLng(48.8589507, 2.2770201);
+    const reims = new google.maps.LatLng(49.2535299, 3.9850489);
     const request = {
-        location: paris,
+        location: reims,
         radius: 10000,
         type: ['restaurant']
     }
     
     map = new google.maps.Map(document.getElementById('map'), {
-        center: paris,
+        center: reims,
         zoom: 12
     });
     
@@ -233,8 +235,11 @@ function initMap() {
     service.nearbySearch(request, callback);
 
     document.addEventListener("restaurantLoaded", () => {
-        const readMap = new Maps(app.listRestaurants);
-        readMap.createMarkers(map);
+        const readMap = new Maps(app);
+        
+        console.log(readMap)
+        
+        //readMap.createMarkers(map);
         readMap.displayInfoWindow();
         app.clickStars(readMap, map);
 
@@ -261,27 +266,7 @@ function createMarker(place) {
     });
     
     marker.addListener('click', function() {
-        const request = {
-            reference: place.reference
-        };
-        
-        service.getDetails(request, (details, status) => {
-            let contentString = "";
-            
-            contentString = `<ul><li>Nom du Restaurant : ${details.name} ${details.rating}</li>
-                                 <li>${details.icon}</li>
-                                 <li>Adresse : ${details.vicinity}</li></ul>`;
-            
-            for(let i = 0; i < details.reviews.length; i++) {
-                (function(i) {
-                    contentString += (`<ul><li>Note: ${details.reviews[i].rating}</li>
-                                        <li>Commentaire: ${details.reviews[i].text}</li></ul>`);
-                })(i)
-            }
-            
-            infowindow.setContent(contentString);
-            infowindow.open(map, marker);
-        });
+        $(`#collapse${place.length}`).collapse('toggle');
     });
 }
 
