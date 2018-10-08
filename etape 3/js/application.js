@@ -3,17 +3,15 @@ class Application {
         this.map = map;
         this.request = request;
         this.service = new google.maps.places.PlacesService(this.map);
-        this.listRestaurants = this.service.nearbySearch(request, this.getRestaurantsFromPlaces.bind(this));
+        this.listRestaurants = [];
+        this.service.nearbySearch(this.request, this.getRestaurantsFromPlaces.bind(this));
     }
     
     getRestaurantsFromPlaces(results, status) {
-        const restaurants = [];
-        
         const loaded = new Event("restaurantLoaded", {bubbles:true});
-        document.dispatchEvent(loaded);
         
         $.each(results, (index, value) => {
-            const restaurant = new Restaurant(value.name, value.vicinity, {"lat":value.geometry.location.lat, "lng":value.geometry.location.lng}, value.icon, value.rating);
+            const restaurant = new Restaurant(value.name, value.vicinity, {"lat":value.geometry.location.lat(), "lng":value.geometry.location.lng()}, value.icon, value.rating);
             
             const request = {
                 reference: value.reference
@@ -22,21 +20,22 @@ class Application {
             setTimeout(() => {
                 if(status === google.maps.places.PlacesServiceStatus.OK) {
                     this.service.getDetails(request, (details, status) => {
-                        const tab = [];
+                        const stockRatings = [];
 
                         for(let i = 0; i < details.reviews.length; i++) {
                             let rating = {"stars":details.reviews[i].rating, "comment":details.reviews[i].text};
-                            tab.push(rating);
+                            stockRatings.push(rating);
                         }
                         
-                        restaurant.ratings = tab;
-                        restaurants.push(restaurant);
+                        restaurant.ratings = stockRatings;
                     });
                 }
-            }, 2000 * index);
+            }, 500 * index);
+            
+            this.listRestaurants.push(restaurant);
         });
         
-        return restaurants;
+        document.dispatchEvent(loaded);
     }
 
     clickStars(map, markers) {
@@ -55,7 +54,7 @@ class Application {
                     if(ui.value == ui.values[0] || ui.value == ui.values[1]) {
                         $(".card").remove();
                         map.restaurants = [];
-                        map.deleteMarkers();
+                        //map.deleteMarkers();
 
                         $.each(list, function(index, value) {
                             average = Math.round(this.sortByRating() * 10) / 10;
@@ -65,7 +64,7 @@ class Application {
                             }
                         });
 
-                        map.createMarkers(markers);
+                        //map.createMarkers(markers);
                         map.displayInfoWindow();
                         map.addForm();
                         map.addReview();

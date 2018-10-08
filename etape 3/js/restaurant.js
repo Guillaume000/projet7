@@ -11,15 +11,17 @@ class Restaurant {
     sortByRating() {
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         const stockRate = [];
-        const totalRate = this.ratings.length;
+        const totalRate = this.ratings ? this.ratings.length : 0;
 
-        for(let i = 0; i < this.ratings.length; i++) {
-            const note = this.ratings[i].stars;
-            stockRate.push(note);
+        if(totalRate > 0) {
+            for(let i = 0; i < totalRate; i++) {
+                const note = this.ratings[i].stars;
+                stockRate.push(note);
+            }
+            
+           this.starsAverage = stockRate.reduce(reducer) / totalRate;
         }
-
-        this.starsAverage = stockRate.reduce(reducer) / totalRate;
-
-        return Math.round(this.starsAverage);
+        
+        return this.starsAverage;
     }
 }

@@ -4,8 +4,8 @@ class Maps {
         this.markers = [];
     }
 
-    /*createMarkers(map, markers) {
-        $.each(this.restaurants, (index, value) => {
+    /*createMarkers(map) {
+        $.each(this.restaurants, (index, value) => {    
             const marker = new google.maps.Marker({
                 position: new google.maps.LatLng(this.restaurants[index].position),
                 map: map
@@ -19,7 +19,7 @@ class Maps {
         });
     }*/
 
-    addMarker(location, map, ...markers) {
+    /*addMarker(location, map, ...markers) {
         const marker = new google.maps.Marker({
             position: location,
             map: map
@@ -40,24 +40,28 @@ class Maps {
     deleteMarkers() {
         this.clearMarkers();
         this.markers = [];
-    }
+    }*/
 
     displayList() {
         let contentString = "";
         const array = [];
 
         $.each(this.restaurants, (index, value) => {
-            contentString = `<ul><li>Nom du Restaurant : ${value.name}</li>
+            contentString = `<ul><li>${value.name}</li>
                              <li>Adresse : ${value.address}</li></ul>`;
-
-            for(let i = 0; i < value.ratings.length; i++) {
-                (function(i) {
-                    contentString += (`<ul><li>Note : ${value.ratings[i].stars}</li>
-                                       <li>Commentaire : ${value.ratings[i].comment}</li></ul>`);
-                })(i)
-            }
+            
+                if(value.ratings != undefined) {
+                    for(let i = 0; i < value.ratings.length; i++) {
+                        (function(i) {
+                            contentString += (`<ul><li>Note : ${value.ratings[i].stars}</li>
+                                               <li>Commentaire : ${value.ratings[i].comment}</li></ul>`);
+                        })(i)
+                    }
+                }
+            
             array.push(contentString);
         });
+        
         return array;
     }
 
@@ -91,7 +95,7 @@ class Maps {
                   <div class="card-header" id="heading${index}">
                     <h5 class="mb-0">
                     <button id="restaurant${index}" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
-                        Nom du restaurant : ${value.name} ${value.sortByRating()} <i class="fas fa-star"></i><br>
+                        ${value.name} ${value.sortByRating()} <i class="fas fa-star"></i><br>
                     </button>
                     </h5>
                   </div>
@@ -195,8 +199,6 @@ class Maps {
             }
         });
         
-        console.log(this.restaurants);
-        
         for(let k = 0; k < this.restaurants.length; k++) {
             $(`#review${k}`).click(() => {
                 const comment = $(`#formControlTextarea${k}`).val();
@@ -235,13 +237,17 @@ function initMap() {
     service.nearbySearch(request, callback);
 
     document.addEventListener("restaurantLoaded", () => {
-        const readMap = new Maps(app);
-        
-        console.log(readMap)
+        const readMap = new Maps(app.listRestaurants);
         
         //readMap.createMarkers(map);
-        readMap.displayInfoWindow();
-        app.clickStars(readMap, map);
+        
+        $("#info").append(`<div id="loading">Chargement en cours ...</div>`);
+        
+        setTimeout(() => {
+            readMap.displayInfoWindow();
+            app.clickStars(readMap, map);
+            $("#loading").hide();
+        }, 10000);
 
         map.addListener('click', function(event) {
             readMap.addMarker(event.latLng, map);
