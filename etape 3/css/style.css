@@ -9,16 +9,6 @@ ul {
     padding: 0;
 }
 
-.table {
-    height: 100%;
-    margin-bottom: 0;
-}
-
-.restaurant {
-    cursor: pointer;
-    color: #007bff;
-}
-
 #map {
     height: 100%;
 }
@@ -30,6 +20,16 @@ ul {
 
 #amount {
     text-align: center;
+}
+
+.table {
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.restaurant {
+    cursor: pointer;
+    color: #007bff;
 }
 
 .rating-stars ul {

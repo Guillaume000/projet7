@@ -4,28 +4,13 @@ class Maps {
         this.markers = [];
     }
 
-    /*createMarkers(map) {
-        $.each(this.restaurants, (index, value) => {    
-            const marker = new google.maps.Marker({
-                position: new google.maps.LatLng(this.restaurants[index].position),
-                map: map
-            });
-
-            this.markers.push(marker);
-
-            marker.addListener('click', function() {
-                $(`#collapse${index}`).collapse('toggle');
-            });
-        });
-    }*/
-
     /*addMarker(location, map, ...markers) {
         const marker = new google.maps.Marker({
             position: location,
             map: map
         });
         this.markers.push(marker);
-    }
+    }*/
 
     setMapOnAll(map) {
         for (var i = 0; i < this.markers.length; i++) {
@@ -40,7 +25,7 @@ class Maps {
     deleteMarkers() {
         this.clearMarkers();
         this.markers = [];
-    }*/
+    }
 
     displayList() {
         let contentString = "";
@@ -74,7 +59,7 @@ class Maps {
             imageUrl = `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${this.restaurants[index].position.lat},${this.restaurants[index].position.lng}&fov=90&heading=235&pitch=10`;
 
             infoWindow = new google.maps.InfoWindow({
-                content: `<div class="card" style="width: 22rem;">
+                content: `<div class="card">
                             <img class="card-img-top" src=${imageUrl}>
                             <div class="card-body">
                               <p class="card-text">${value}</p>
@@ -95,7 +80,7 @@ class Maps {
                   <div class="card-header" id="heading${index}">
                     <h5 class="mb-0">
                     <button id="restaurant${index}" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
-                        ${value.name} ${value.sortByRating()} <i class="fas fa-star"></i><br>
+                        ${value.name} <span id="restaurantRate">${value.starsAverage}</span> <i class="fas fa-star"></i><br>
                     </button>
                     </h5>
                   </div>
@@ -135,7 +120,7 @@ class Maps {
     
     addForm() {
         $('.modal-body').append(`
-            <form>
+            <form id="test">
               <div class='rating-stars text-center'>
                 <ul id='stars'>
                   <li class='star' data-value='1'>
@@ -204,18 +189,23 @@ class Maps {
                 const comment = $(`#formControlTextarea${k}`).val();
                 const json = `{"stars":${rate}, "comment":"${comment}"}`;
                 let object;
+                let average;
                 
                 object = JSON.parse(json);
                 this.restaurants[k].ratings.push(object);
                 $(`#info${k} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
+                
+                $.each(this.restaurants, function(index, value) {
+                    average = Math.round(this.sortByRating() * 10) / 10;
+                    this.starsAverage = average;
+                    $('#restaurantRate').replaceWith(this.starsAverage);
+                });
             });
         }
     }
 }
 
 let map;
-let infowindow;
-let service;
 
 function initMap() {
     const reims = new google.maps.LatLng(49.2535299, 3.9850489);
@@ -231,51 +221,26 @@ function initMap() {
     });
     
     const app = new Application(map, request);
-    
-    infowindow = new google.maps.InfoWindow();
-    service = new google.maps.places.PlacesService(map);
-    service.nearbySearch(request, callback);
 
     document.addEventListener("restaurantLoaded", () => {
         const readMap = new Maps(app.listRestaurants);
-        
-        //readMap.createMarkers(map);
         
         $("#info").append(`<div id="loading">Chargement en cours ...</div>`);
         
         setTimeout(() => {
             readMap.displayInfoWindow();
+            readMap.addForm();
+            readMap.addReview();
+            
             app.clickStars(readMap, map);
+            
             $("#loading").hide();
+            
+            /*map.addListener('click', function(event) {
+                readMap.addMarker(event.latLng, map);
+            });*/
         }, 10000);
-
-        map.addListener('click', function(event) {
-            readMap.addMarker(event.latLng, map);
-        });
-        
-        readMap.addForm();
-        readMap.addReview();
     });
 }
-
-function callback(results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-        results.forEach(createMarker);
-    }
-}
-
-function createMarker(place) {
-    const placeLoc = place.geometry.location;
-    const marker = new google.maps.Marker({
-        map: map,
-        position: place.geometry.location
-    });
-    
-    marker.addListener('click', function() {
-        $(`#collapse${place.length}`).collapse('toggle');
-    });
-}
-
-
 
 

@@ -36,6 +36,22 @@ class Application {
         });
         
         document.dispatchEvent(loaded);
+        
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            results.forEach(this.createMarker);
+        }
+    }
+
+    createMarker(place, results) {
+        const placeLoc = place.geometry.location;
+        const marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location
+        });
+        
+        marker.addListener('click', function() {
+            $(`#collapse${results}`).collapse('toggle');
+        }); 
     }
 
     clickStars(map, markers) {
@@ -54,17 +70,19 @@ class Application {
                     if(ui.value == ui.values[0] || ui.value == ui.values[1]) {
                         $(".card").remove();
                         map.restaurants = [];
+                        
                         //map.deleteMarkers();
 
                         $.each(list, function(index, value) {
-                            average = Math.round(this.sortByRating() * 10) / 10;
-
-                            if(average >= ui.values[0] && average <= ui.values[1]) {
+                            Math.round(this.starsAverage);
+                            
+                            if(this.starsAverage >= ui.values[0] && this.starsAverage <= ui.values[1]) {
                                 map.restaurants.push(value);
                             }
                         });
 
                         //map.createMarkers(markers);
+                        
                         map.displayInfoWindow();
                         map.addForm();
                         map.addReview();
