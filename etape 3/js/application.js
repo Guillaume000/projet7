@@ -43,7 +43,6 @@ class Application {
     }
 
     createMarker(place, results) {
-        const placeLoc = place.geometry.location;
         const marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location
@@ -54,9 +53,8 @@ class Application {
         }); 
     }
 
-    clickStars(map, markers) {
+    clickStars(map) {
         const list = this.listRestaurants;
-        let average;
 
         $(function() {
             $("#slider-range").slider({
@@ -71,7 +69,9 @@ class Application {
                         $(".card").remove();
                         map.restaurants = [];
                         
-                        //map.deleteMarkers();
+                        
+                        //marker.setVisible(false);
+                        
 
                         $.each(list, function(index, value) {
                             Math.round(this.starsAverage);
@@ -81,7 +81,9 @@ class Application {
                             }
                         });
 
-                        //map.createMarkers(markers);
+                        
+                        //marker.setVisible(true);
+                        
                         
                         map.displayInfoWindow();
                         map.addForm();
