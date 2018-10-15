@@ -33,27 +33,27 @@ class Application {
             }, 500 * index);
             
             this.listRestaurants.push(restaurant);
+            
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                this.listRestaurants.forEach(this.createMarker);
+            }
         });
         
         document.dispatchEvent(loaded);
-        
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-            results.forEach(this.createMarker);
-        }
     }
 
     createMarker(place, results) {
-        const marker = new google.maps.Marker({
+        place.marker = new google.maps.Marker({
             map: map,
-            position: place.geometry.location
+            position: {"lat":place.position.lat, "lng":place.position.lng}
         });
         
-        marker.addListener('click', function() {
+        place.marker.addListener('click', function() {
             $(`#collapse${results}`).collapse('toggle');
         }); 
     }
 
-    clickStars(map) {
+    clickStars(readMap, map) {
         const list = this.listRestaurants;
 
         $(function() {
@@ -67,27 +67,21 @@ class Application {
 
                     if(ui.value == ui.values[0] || ui.value == ui.values[1]) {
                         $(".card").remove();
-                        map.restaurants = [];
-                        
-                        
-                        //marker.setVisible(false);
-                        
+                        readMap.restaurants = [];
 
-                        $.each(list, function(index, value) {
-                            Math.round(this.starsAverage);
-                            
-                            if(this.starsAverage >= ui.values[0] && this.starsAverage <= ui.values[1]) {
-                                map.restaurants.push(value);
-                            }
+                        $.each(list, function(index, value) {  
+                            if(value.starsAverage >= ui.values[0] && value.starsAverage <= ui.values[1]) {
+                                readMap.restaurants.push(value);
+                            } else {
+                                value.marker.visible = false;
+                            }                        
                         });
-
                         
-                        //marker.setVisible(true);
+                        //google.maps.event.trigger(map, 'resize');
                         
-                        
-                        map.displayInfoWindow();
-                        map.addForm();
-                        map.addReview();
+                        readMap.displayInfoWindow();
+                        readMap.addForm();
+                        readMap.addReview();
                     }
                 }
             });

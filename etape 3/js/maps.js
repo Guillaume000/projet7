@@ -80,7 +80,7 @@ class Maps {
                   <div class="card-header" id="heading${index}">
                     <h5 class="mb-0">
                     <button id="restaurant${index}" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
-                        ${value.name} <span id="restaurantRate">${value.starsAverage}</span> <i class="fas fa-star"></i><br>
+                        ${value.name} <span id="restaurantRate${index}">${value.starsAverage}</span> <i class="fas fa-star"></i><br>
                     </button>
                     </h5>
                   </div>
@@ -192,12 +192,10 @@ class Maps {
                 
                 object = JSON.parse(json);
                 this.restaurants[k].ratings.push(object);
-                $(`#info${k} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
+                this.restaurants[k].sortByRating();
+                document.getElementById("restaurantRate" + k).textContent = this.restaurants[k].starsAverage;
                 
-                $.each(this.restaurants, function(index, value) {
-                    this.starsAverage = Math.round(this.sortByRating() * 10) / 10;
-                    $('#restaurantRate').replaceWith(this.starsAverage);
-                });
+                $(`#info${k} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
             });
         }
     }
@@ -239,6 +237,7 @@ function initMap() {
             });*/
         }, 10000);
     });
+    
 }
 
 
