@@ -33,13 +33,15 @@ class Application {
             }, 500 * index);
             
             this.listRestaurants.push(restaurant);
-            
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-                this.listRestaurants.forEach(this.createMarker);
-            }
         });
         
         document.dispatchEvent(loaded);
+    }
+    
+    callBack(/*status*/) {
+        //if(status === google.maps.places.PlacesServiceStatus.OK) {
+            this.listRestaurants.forEach(this.createMarker);
+        //}
     }
 
     createMarker(place, results) {
@@ -72,12 +74,11 @@ class Application {
                         $.each(list, function(index, value) {  
                             if(value.starsAverage >= ui.values[0] && value.starsAverage <= ui.values[1]) {
                                 readMap.restaurants.push(value);
+                                value.marker.setVisible(true);
                             } else {
-                                value.marker.visible = false;
+                                value.marker.setVisible(false);
                             }                        
                         });
-                        
-                        //google.maps.event.trigger(map, 'resize');
                         
                         readMap.displayInfoWindow();
                         readMap.addForm();

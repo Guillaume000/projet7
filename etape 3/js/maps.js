@@ -221,6 +221,8 @@ function initMap() {
     document.addEventListener("restaurantLoaded", () => {
         const readMap = new Maps(app.listRestaurants);
         
+        app.callBack();
+
         $("#info").append(`<div id="loading">Chargement en cours ...</div>`);
         
         setTimeout(() => {
