@@ -38,26 +38,25 @@ class Application {
         document.dispatchEvent(loaded);
     }
     
-    callBack(/*status*/) {
-        //if(status === google.maps.places.PlacesServiceStatus.OK) {
-            this.listRestaurants.forEach(this.createMarker);
-        //}
+    callBack() {
+        this.listRestaurants.forEach(this.createMarker);
     }
 
     createMarker(place, results) {
         place.marker = new google.maps.Marker({
             map: map,
-            position: {"lat":place.position.lat, "lng":place.position.lng}
+            position: {"lat":place.position.lat, "lng":place.position.lng},
+            label: `${place.name} id: ${results}`
         });
         
         place.marker.addListener('click', function() {
             $(`#collapse${results}`).collapse('toggle');
-        }); 
+        });
     }
 
     clickStars(readMap, map) {
         const list = this.listRestaurants;
-
+        
         $(function() {
             $("#slider-range").slider({
                 range: true,
@@ -68,16 +67,18 @@ class Application {
                     $("#amount").html(ui.values[0] + "<i class=\"fas fa-star\"></i> - " + ui.values[1] + "<i class=\"fas fa-star\"></i>");
 
                     if(ui.value == ui.values[0] || ui.value == ui.values[1]) {
-                        $(".card").remove();
+                        $(".card").remove();                        
                         readMap.restaurants = [];
 
                         $.each(list, function(index, value) {  
                             if(value.starsAverage >= ui.values[0] && value.starsAverage <= ui.values[1]) {
                                 readMap.restaurants.push(value);
                                 value.marker.setVisible(true);
+                                //value.marker.setMap(map);
                             } else {
                                 value.marker.setVisible(false);
-                            }                        
+                                //value.marker.setMap(null);
+                            }    
                         });
                         
                         readMap.displayInfoWindow();

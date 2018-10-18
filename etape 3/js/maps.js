@@ -1,18 +1,18 @@
 class Maps {
     constructor(restaurants) {
         this.restaurants = restaurants;
-        //this.markers = [];
+        this.markers = [];
     }
 
-    /*addMarker(location, map, ...markers) {
+    addMarker(location, map, ...markers) {
         const marker = new google.maps.Marker({
             position: location,
             map: map
         });
         this.markers.push(marker);
-    }*/
+    }
 
-    /*setMapOnAll(map) {
+    setMapOnAll(map) {
         for (var i = 0; i < this.markers.length; i++) {
             this.markers[i].setMap(map);
         }
@@ -25,7 +25,7 @@ class Maps {
     deleteMarkers() {
         this.clearMarkers();
         this.markers = [];
-    }*/
+    }
 
     displayList() {
         let contentString = "";
@@ -223,21 +223,21 @@ function initMap() {
         
         app.callBack();
 
-        $("#info").append(`<div id="loading">Chargement en cours ...</div>`);
+        //$("#info").append(`<div id="loading">Chargement en cours ...</div>`);
         
-        setTimeout(() => {
+        //setTimeout(() => {
             readMap.displayInfoWindow();
             readMap.addForm();
             readMap.addReview();
             
             app.clickStars(readMap, map);
             
-            $("#loading").hide();
+            //$("#loading").hide();
             
-            /*map.addListener('click', function(event) {
+            map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);
-            });*/
-        }, 10000);
+            });
+        //}, 10000);
     });
     
 }
