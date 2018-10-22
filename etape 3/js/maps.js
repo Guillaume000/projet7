@@ -77,36 +77,36 @@ class Maps {
         $.each(this.restaurants, (index, value) => {
             $("#restaurantAccordion").append(`
                 <div class="card">
-                  <div class="card-header" id="heading${index}">
+                  <div class="card-header" id="heading${value.id}">
                     <h5 class="mb-0">
-                    <button id="restaurant${index}" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
-                        ${value.name} <span id="restaurantRate${index}">${value.starsAverage}</span> <i class="fas fa-star"></i><br>
+                    <button id="restaurant${value.id}" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${value.id}" aria-expanded="true" aria-controls="collapse${value.id}">
+                        ${value.name} <span id="restaurantRate${value.id}">${value.starsAverage}</span> <i class="fas fa-star"></i><br>
                     </button>
                     </h5>
                   </div>
 
-                  <div id="collapse${index}" class="collapse" aria-labelledby="heading${index}" data-parent="#restaurantAccordion">
-                    <div id="info${index}" class="card-body">
+                  <div id="collapse${value.id}" class="collapse" aria-labelledby="heading${value.id}" data-parent="#restaurantAccordion">
+                    <div id="info${value.id}" class="card-body">
                       ${infoWindows[index].content}
-                      <button type="button" class="btn btn-info review" data-toggle="modal" data-target="#modal${index}">Ajouter un avis</button>
-                      <div class="modal fade" id="modal${index}" tabindex="-1" role="dialog" aria-labelledby="modalLabel${index}" aria-hidden="true">
+                      <button type="button" class="btn btn-info review" data-toggle="modal" data-target="#modal${value.id}">Ajouter un avis</button>
+                      <div class="modal fade" id="modal${value.id}" tabindex="-1" role="dialog" aria-labelledby="modalLabel${value.id}" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h5 class="modal-title" id="modalLabel${index}">Ajouter un avis</h5>
+                              <h5 class="modal-title" id="modalLabel${value.id}">Ajouter un avis</h5>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                               </button>
                             </div>
                             <div class="modal-body">
                               <div class="form-group">
-                                <label for="formControlTextarea${index}">Commentaire :</label>
-                                <textarea class="form-control" id="formControlTextarea${index}" rows="3"></textarea>
+                                <label for="formControlTextarea${value.id}">Commentaire :</label>
+                                <textarea class="form-control" id="formControlTextarea${value.id}" rows="3"></textarea>
                               </div>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-                              <button type="button" id="review${index}" class="btn btn-success" data-dismiss="modal">Ajouter</button>
+                              <button type="button" id="review${value.id}" class="btn btn-success" data-dismiss="modal">Ajouter</button>
                             </div>
                           </div>
                         </div>
@@ -185,17 +185,18 @@ class Maps {
         });
         
         for(let k = 0; k < this.restaurants.length; k++) {
-            $(`#review${k}`).click(() => {
-                const comment = $(`#formControlTextarea${k}`).val();
+            const restaurantId = this.restaurants[k].id;
+            $(`#review${restaurantId}`).click(() => {
+                const comment = $(`#formControlTextarea${restaurantId}`).val();
                 const json = `{"stars":${rate}, "comment":"${comment}"}`;
                 let object;
                 
                 object = JSON.parse(json);
                 this.restaurants[k].ratings.push(object);
                 this.restaurants[k].sortByRating();
-                document.getElementById("restaurantRate" + k).textContent = this.restaurants[k].starsAverage;
+                document.getElementById("restaurantRate" + restaurantId).textContent = this.restaurants[k].starsAverage;
                 
-                $(`#info${k} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
+                $(`#info${restaurantId} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
             });
         }
     }
@@ -222,24 +223,25 @@ function initMap() {
         const readMap = new Maps(app.listRestaurants);
         
         app.callBack();
-
-        //$("#info").append(`<div id="loading">Chargement en cours ...</div>`);
         
-        //setTimeout(() => {
+        $("#info").append(`<div class="modal" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false"></div>`);
+        
+        $('#loadingModal').modal('show');
+        $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
+        
+        setTimeout(() => {
             readMap.displayInfoWindow();
             readMap.addForm();
             readMap.addReview();
             
             app.clickStars(readMap, map);
             
-            //$("#loading").hide();
+            $('#loadingModal').modal('hide');
             
             map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);
             });
-        //}, 10000);
+        }, 10000);
     });
     
 }
-
-

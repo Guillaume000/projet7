@@ -11,10 +11,10 @@ class Application {
         const loaded = new Event("restaurantLoaded", {bubbles:true});
         
         $.each(results, (index, value) => {
-            const restaurant = new Restaurant(value.name, value.vicinity, {"lat":value.geometry.location.lat(), "lng":value.geometry.location.lng()}, value.icon, value.rating);
+            const restaurant = new Restaurant(value.name, value.vicinity, {"lat":value.geometry.location.lat(), "lng":value.geometry.location.lng()}, value.icon, value.rating, index);
             
             const request = {
-                reference: value.reference
+                placeId: value.reference,
             };
             
             setTimeout(() => {
@@ -45,8 +45,7 @@ class Application {
     createMarker(place, results) {
         place.marker = new google.maps.Marker({
             map: map,
-            position: {"lat":place.position.lat, "lng":place.position.lng},
-            label: `${place.name} id: ${results}`
+            position: {"lat":place.position.lat, "lng":place.position.lng}
         });
         
         place.marker.addListener('click', function() {
@@ -74,10 +73,8 @@ class Application {
                             if(value.starsAverage >= ui.values[0] && value.starsAverage <= ui.values[1]) {
                                 readMap.restaurants.push(value);
                                 value.marker.setVisible(true);
-                                //value.marker.setMap(map);
                             } else {
                                 value.marker.setVisible(false);
-                                //value.marker.setMap(null);
                             }    
                         });
                         

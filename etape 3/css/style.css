@@ -22,6 +22,14 @@ ul {
     text-align: center;
 }
 
+#loadingMessage {
+    margin-top: 20px;
+}
+
+#loadingSpin {
+    margin-top: 320px;
+}
+
 .table {
     height: 100%;
     margin-bottom: 0;
