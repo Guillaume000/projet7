@@ -12,21 +12,6 @@ class Maps {
         this.markers.push(marker);
     }
 
-    setMapOnAll(map) {
-        for (var i = 0; i < this.markers.length; i++) {
-            this.markers[i].setMap(map);
-        }
-    }
-
-    clearMarkers() {
-        this.setMapOnAll(null);
-    }
-
-    deleteMarkers() {
-        this.clearMarkers();
-        this.markers = [];
-    }
-
     displayList() {
         let contentString = "";
         const array = [];
@@ -72,7 +57,7 @@ class Maps {
     }
 
     displayInfoWindow() {
-        let infoWindows = this.createInfoWindow();
+        const infoWindows = this.createInfoWindow();
 
         $.each(this.restaurants, (index, value) => {
             $("#restaurantAccordion").append(`
@@ -120,7 +105,7 @@ class Maps {
     
     addForm() {
         $('.modal-body').append(`
-            <form id="checkForm">
+            <form>
               <div class='rating-stars text-center'>
                 <ul id='stars'>
                   <li class='star' data-value='1'>
@@ -189,11 +174,11 @@ class Maps {
             $(`#review${restaurantId}`).click(() => {
                 const comment = $(`#formControlTextarea${restaurantId}`).val();
                 const json = `{"stars":${rate}, "comment":"${comment}"}`;
-                let object;
+                const object = JSON.parse(json);
                 
-                object = JSON.parse(json);
                 this.restaurants[k].ratings.push(object);
                 this.restaurants[k].sortByRating();
+                
                 document.getElementById("restaurantRate" + restaurantId).textContent = this.restaurants[k].starsAverage;
                 
                 $(`#info${restaurantId} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
@@ -242,6 +227,5 @@ function initMap() {
                 readMap.addMarker(event.latLng, map);
             });
         }, 10000);
-    });
-    
+    }); 
 }
