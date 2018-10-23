@@ -19,7 +19,7 @@ class Application {
 
                     list.push(restaurant);
                 });
-                var loaded = new Event("restaurantLoaded", {bubbles:true});
+                const loaded = new Event("restaurantLoaded", {bubbles:true});
                 document.dispatchEvent(loaded);
             },
             type: 'GET'

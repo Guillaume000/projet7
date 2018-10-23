@@ -39,7 +39,7 @@ class Maps {
         const array = [];
 
         $.each(this.restaurants, (index, value) => {
-            contentString = `<ul><li>Nom du Restaurant : ${value.name}</li>
+            contentString = `<ul><li>${value.name}</li>
                              <li>Adresse : ${value.address}</li></ul>`;
 
             for(let i = 0; i < value.ratings.length; i++) {
@@ -103,7 +103,7 @@ class Maps {
 
 function initMap() {
     let map;
-    const paris = new google.maps.LatLng(48.8589507, 2.2770201);
+    const paris = new google.maps.LatLng(48.8737815, 2.3501649);
     const app = new Application('restaurant.json');
 
     map = new google.maps.Map(document.getElementById('map'), {
