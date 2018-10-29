@@ -219,7 +219,10 @@ class Maps {
 let map;
 
 function initMap() {
-    const reims = new google.maps.LatLng(49.2535299, 3.9850489);
+    let reims = new google.maps.LatLng(49.2535299, 3.9850489);
+    
+    const iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+    
     const request = {
         location: reims,
         radius: 10000,
@@ -229,6 +232,16 @@ function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: reims,
         zoom: 12
+    });
+    
+    navigator.geolocation.getCurrentPosition(function(position) {
+        reims = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        
+        const marker = new google.maps.Marker({
+            position: reims,
+            map: map,
+            icon: iconBase + 'library_maps.png',
+        });
     });
     
     const app = new Application(map, request);
