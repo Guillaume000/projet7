@@ -9,27 +9,37 @@ class Maps {
             position: location,
             map: map
         });
+        
+        $("#info").append(`<div class="modal" id="newRestaurant" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">${this.newRestaurantForm()}</div>`);
+        
+        $('#newRestaurant').modal('show');
+        
         this.markers.push(marker);
     }
-
-    displayList() {
+    
+    createRestaurant(element) {
         let contentString = "";
+        
+        contentString = `<ul><li>${element.name}</li>
+                         <li>Adresse : ${element.address}</li></ul>`;
+
+        if(element.ratings != undefined) {
+            for(let i = 0; i < element.ratings.length; i++) {
+                (function(i) {
+                    contentString += (`<ul><li>Note : ${element.ratings[i].stars}</li>
+                         <li>Commentaire : ${element.ratings[i].comment}</li></ul>`);
+                })(i)
+            }
+        }
+        
+        return contentString;
+    }
+    
+    displayList() {
         const array = [];
 
         $.each(this.restaurants, (index, value) => {
-            contentString = `<ul><li>${value.name}</li>
-                             <li>Adresse : ${value.address}</li></ul>`;
-            
-                if(value.ratings != undefined) {
-                    for(let i = 0; i < value.ratings.length; i++) {
-                        (function(i) {
-                            contentString += (`<ul><li>Note : ${value.ratings[i].stars}</li>
-                                               <li>Commentaire : ${value.ratings[i].comment}</li></ul>`);
-                        })(i)
-                    }
-                }
-            
-            array.push(contentString);
+            array.push(this.createRestaurant(value));
         });
         
         return array;
@@ -104,7 +114,11 @@ class Maps {
     }
     
     addForm() {
-        $('.modal-body').append(`
+        $('.modal-body').append(this.addStars());
+    }
+    
+    addStars() {
+        return `
             <form>
               <div class='rating-stars text-center'>
                 <ul id='stars'>
@@ -126,7 +140,18 @@ class Maps {
                 </ul>
               </div>
             </form>
-        `);
+        `;
+    }
+    
+    newRestaurantForm() {
+        return `
+            <form>
+              <div>
+                <input type="text" placeholder="Nom du restaurant">
+                <input type="text" placeholder="Adresse">
+              </div>
+            </form>
+        `;
     }
     
     addReview() {      
@@ -169,18 +194,22 @@ class Maps {
             }
         });
         
+        this.submitForm(rate);
+    }
+    
+    submitForm(rate) {
         for(let k = 0; k < this.restaurants.length; k++) {
             const restaurantId = this.restaurants[k].id;
             $(`#review${restaurantId}`).click(() => {
                 const comment = $(`#formControlTextarea${restaurantId}`).val();
                 const json = `{"stars":${rate}, "comment":"${comment}"}`;
                 const object = JSON.parse(json);
-                
+
                 this.restaurants[k].ratings.push(object);
                 this.restaurants[k].sortByRating();
-                
+
                 document.getElementById("restaurantRate" + restaurantId).textContent = this.restaurants[k].starsAverage;
-                
+
                 $(`#info${restaurantId} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
             });
         }
@@ -214,7 +243,7 @@ function initMap() {
         $('#loadingModal').modal('show');
         $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
         
-        setTimeout(() => {
+        //setTimeout(() => {
             readMap.displayInfoWindow();
             readMap.addForm();
             readMap.addReview();
@@ -226,6 +255,6 @@ function initMap() {
             map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);
             });
-        }, 10000);
+        //}, 10000);
     }); 
 }
