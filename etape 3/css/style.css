@@ -20,6 +20,9 @@ ul {
 
 #amount {
     text-align: center;
+    border: 0; 
+    color:#f6931f; 
+    font-weight:bold;
 }
 
 #loadingMessage {

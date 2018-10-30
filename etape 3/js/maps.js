@@ -10,7 +10,7 @@ class Maps {
             map: map
         });
         
-        $("#info").append(`<div class="modal" id="newRestaurant" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">${this.newRestaurantForm()}</div>`);
+        $("#info").append(`<div class="modal" id="newRestaurant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">${this.newRestaurantForm()}</div>`);
         
         $('#newRestaurant').modal('show');
         
@@ -51,7 +51,7 @@ class Maps {
         const array = [];
 
         $.each(this.displayList(), (index, value) => {
-            imageUrl = `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${this.restaurants[index].position.lat},${this.restaurants[index].position.lng}&fov=90&heading=235&pitch=10`;
+            imageUrl = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${this.restaurants[index].position.lat},${this.restaurants[index].position.lng}&fov=90&heading=235&pitch=10`;
 
             infoWindow = new google.maps.InfoWindow({
                 content: `<div class="card">
@@ -145,12 +145,20 @@ class Maps {
     
     newRestaurantForm() {
         return `
-            <form>
-              <div>
-                <input type="text" placeholder="Nom du restaurant">
-                <input type="text" placeholder="Adresse">
-              </div>
-            </form>
+            <div class="modal-body jumbotron">
+              <form role="form">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="restaurantName" placeholder="Nom du restaurant"/>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse"/>
+                </div>
+
+                <button type="button" class="btn btn-info review" data-toggle="modal" data-target="#modal" onclick="${this.addReview()}">Ajouter un avis</button>
+            </div>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal">Ajouter</button>
+              </form>
         `;
     }
     
