@@ -17,6 +17,33 @@ class Maps {
         this.markers.push(marker);
     }
     
+    test(event) {
+        $("#validRestaurant").click(() => {
+            const nextRestaurant = new Restaurant();
+
+            nextRestaurant.name = $("#restaurantName").val();
+            nextRestaurant.address = $("#restaurantAddress").val();
+            nextRestaurant.position = {"lat":event.lat(), "lng":event.lng()}
+            nextRestaurant.pic = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${nextRestaurant.position}&fov=90&heading=235&pitch=10`;
+
+            $.each(this.restaurants, (index, value) => {
+                nextRestaurant.id = index + 1;
+            });
+
+            this.restaurants.push(nextRestaurant);
+
+            console.log(this.restaurants);
+
+            $(".card").remove();       
+
+            this.displayInfoWindow();
+
+            console.log(nextRestaurant);
+
+            $("#nextForm")[0].reset();
+        });
+    }
+    
     createRestaurant(element) {
         let contentString = "";
         
@@ -121,7 +148,7 @@ class Maps {
         return `
             <form>
               <div class='rating-stars text-center'>
-                <ul id='stars'>
+                <ul id='stars' class="restaurantRatings">
                   <li class='star' data-value='1'>
                     <i class='fa fa-star fa-fw'></i>
                   </li>
@@ -146,18 +173,16 @@ class Maps {
     newRestaurantForm() {
         return `
             <div class="modal-body jumbotron">
-              <form role="form">
+              <form id="nextForm" role="form">
                 <div class="form-group">
                   <input type="text" class="form-control" id="restaurantName" placeholder="Nom du restaurant"/>
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse"/>
                 </div>
-
-                <button type="button" class="btn btn-info review" data-toggle="modal" data-target="#modal" onclick="${this.addReview()}">Ajouter un avis</button>
             </div>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal">Ajouter</button>
+                <button type="button" id="validRestaurant" class="btn btn-success" data-dismiss="modal">Ajouter</button>
               </form>
         `;
     }
@@ -265,17 +290,21 @@ function initMap() {
         $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
         
         //setTimeout(() => {
+        
             readMap.displayInfoWindow();
             readMap.addForm();
             readMap.addReview();
-            
+
             app.clickStars(readMap, map);
             
-            $('#loadingModal').modal('hide');
             
-            map.addListener('click', function(event) {
+            $('#loadingModal').modal('hide');
+        
+            map.addListener('click', function(event) {            
                 readMap.addMarker(event.latLng, map);
+                readMap.test(event.latLng);
             });
+        
         //}, 10000);
     }); 
 }
