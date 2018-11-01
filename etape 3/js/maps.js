@@ -17,30 +17,31 @@ class Maps {
         this.markers.push(marker);
     }
     
-    test(event) {
-        $("#validRestaurant").click(() => {
+    validForm(event) {
+        $("#validRestaurant").one('click', (e) => {                 
             const nextRestaurant = new Restaurant();
 
             nextRestaurant.name = $("#restaurantName").val();
             nextRestaurant.address = $("#restaurantAddress").val();
-            nextRestaurant.position = {"lat":event.lat(), "lng":event.lng()}
+            nextRestaurant.position = {"lat":event.lat(), "lng":event.lng()};
             nextRestaurant.pic = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${nextRestaurant.position}&fov=90&heading=235&pitch=10`;
 
             $.each(this.restaurants, (index, value) => {
                 nextRestaurant.id = index + 1;
             });
-
+            
+            $.each(this.markers, (index, value) => {
+                nextRestaurant.marker = value;
+            });
+            
             this.restaurants.push(nextRestaurant);
-
-            console.log(this.restaurants);
-
             $(".card").remove();       
-
             this.displayInfoWindow();
 
+            //console.log(this.restaurants);
             console.log(nextRestaurant);
-
-            $("#nextForm")[0].reset();
+            
+            $("#nextForm")[0].reset(); 
         });
     }
     
@@ -181,7 +182,7 @@ class Maps {
                   <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse"/>
                 </div>
             </div>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                <button type="button" id="cancelRestaurant" class="btn btn-danger" data-dismiss="modal">Annuler</button>
                 <button type="button" id="validRestaurant" class="btn btn-success" data-dismiss="modal">Ajouter</button>
               </form>
         `;
@@ -297,12 +298,11 @@ function initMap() {
 
             app.clickStars(readMap, map);
             
-            
             $('#loadingModal').modal('hide');
         
-            map.addListener('click', function(event) {            
+            map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);
-                readMap.test(event.latLng);
+                readMap.validForm(event.latLng);
             });
         
         //}, 10000);
