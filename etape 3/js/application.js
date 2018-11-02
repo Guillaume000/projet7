@@ -48,8 +48,6 @@ class Application {
             position: {"lat":place.position.lat, "lng":place.position.lng}
         });
         
-        //console.log(place);
-        
         place.marker.addListener('click', function() {
             $(`#collapse${results}`).collapse('toggle');
         });

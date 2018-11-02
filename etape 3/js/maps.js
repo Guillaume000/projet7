@@ -4,7 +4,7 @@ class Maps {
         this.markers = [];
     }
 
-    addMarker(location, map, ...markers) {
+    addMarker(location, map) {
         const marker = new google.maps.Marker({
             position: location,
             map: map
@@ -17,9 +17,11 @@ class Maps {
         this.markers.push(marker);
     }
     
-    validForm(event) {
-        $("#validRestaurant").one('click', (e) => {                 
+    validForm(event) {     
+        $("#validRestaurant").one('click', (e) => {
             const nextRestaurant = new Restaurant();
+            const json = `{"stars":${0}, "comment":"${""}"}`;
+            const object = JSON.parse(json);
 
             nextRestaurant.name = $("#restaurantName").val();
             nextRestaurant.address = $("#restaurantAddress").val();
@@ -33,15 +35,31 @@ class Maps {
             $.each(this.markers, (index, value) => {
                 nextRestaurant.marker = value;
             });
+
+            nextRestaurant.ratings = object;
+            nextRestaurant.starsAverage = 1;
+            
+            console.log(nextRestaurant);
             
             this.restaurants.push(nextRestaurant);
             $(".card").remove();       
             this.displayInfoWindow();
-
-            //console.log(this.restaurants);
-            console.log(nextRestaurant);
             
+            
+            this.addForm();
+            this.addReview();
+  
+        
+            this.toggleRestaurant();
             $("#nextForm")[0].reset(); 
+        });
+    }
+    
+    toggleRestaurant() {
+        $.each(this.restaurants, (index, value) => {
+            value.marker.addListener('click', () => {
+                $(`#collapse${index}`).collapse('toggle'); 
+            });
         });
     }
     
@@ -181,6 +199,7 @@ class Maps {
                 <div class="form-group">
                   <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse"/>
                 </div>
+                <div class="form-group" id="rateStars"></div>
             </div>
                 <button type="button" id="cancelRestaurant" class="btn btn-danger" data-dismiss="modal">Annuler</button>
                 <button type="button" id="validRestaurant" class="btn btn-success" data-dismiss="modal">Ajouter</button>
@@ -232,21 +251,21 @@ class Maps {
     }
     
     submitForm(rate) {
-        for(let k = 0; k < this.restaurants.length; k++) {
-            const restaurantId = this.restaurants[k].id;
+        $.each(this.restaurants, (index, value) => {
+            const restaurantId = this.restaurants[index].id;
             $(`#review${restaurantId}`).click(() => {
                 const comment = $(`#formControlTextarea${restaurantId}`).val();
                 const json = `{"stars":${rate}, "comment":"${comment}"}`;
                 const object = JSON.parse(json);
+                
+                this.restaurants[index].ratings.push(object);
+                this.restaurants[index].sortByRating();
 
-                this.restaurants[k].ratings.push(object);
-                this.restaurants[k].sortByRating();
-
-                document.getElementById("restaurantRate" + restaurantId).textContent = this.restaurants[k].starsAverage;
+                document.getElementById("restaurantRate" + restaurantId).textContent = this.restaurants[index].starsAverage;
 
                 $(`#info${restaurantId} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
             });
-        }
+        });
     }
 }
 
@@ -290,7 +309,7 @@ function initMap() {
         $('#loadingModal').modal('show');
         $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
         
-        //setTimeout(() => {
+        setTimeout(() => {
         
             readMap.displayInfoWindow();
             readMap.addForm();
@@ -305,6 +324,6 @@ function initMap() {
                 readMap.validForm(event.latLng);
             });
         
-        //}, 10000);
+        }, 10000);
     }); 
 }
