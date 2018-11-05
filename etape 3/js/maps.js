@@ -12,17 +12,44 @@ class Maps {
         
         $("#info").append(`<div class="modal" id="newRestaurant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">${this.newRestaurantForm()}</div>`);
         
+        this.addReview();
+        
+        $('#rateComment').html(this.addComment(this.restaurants.length));
         $('#newRestaurant').modal('show');
         
+        this.validForm(marker.position);
+        this.cancelForm(marker);
+        
         this.markers.push(marker);
+    }
+    
+    cancelForm(marker) {
+        $("#cancelRestaurant").one('click', (e) => {
+            // Selectionner le dernier marker
+            
+            $.each(this.markers, function(index, value) {  
+                value.setVisible(false);
+            });
+            
+            this.markers.pop();
+            
+            $.each(this.markers, function(index, value) {  
+                value.setVisible(true);
+            });
+            //this.markers[test].visible(true);
+
+            console.log(this.markers);
+        });
     }
     
     validForm(event) {     
         $("#validRestaurant").one('click', (e) => {
             const nextRestaurant = new Restaurant();
-            const json = `{"stars":${0}, "comment":"${""}"}`;
-            const object = JSON.parse(json);
-
+            const starValue = $("#stars .selected");
+            let comment;
+            let json;
+            let object;
+            
             nextRestaurant.name = $("#restaurantName").val();
             nextRestaurant.address = $("#restaurantAddress").val();
             nextRestaurant.position = {"lat":event.lat(), "lng":event.lng()};
@@ -35,22 +62,29 @@ class Maps {
             $.each(this.markers, (index, value) => {
                 nextRestaurant.marker = value;
             });
+            
+            starValue.each(function () {
+                $(this).is("[data-value=5]:last")
+            });
+            
+            comment = $(`#formControlTextarea${nextRestaurant.id}`).val();
+            json = `{"stars":${starValue.length}, "comment":"${comment}"}`;
+            object = JSON.parse(json);
 
-            nextRestaurant.ratings = object;
-            nextRestaurant.starsAverage = 1;
+            nextRestaurant.ratings = object;            
+            nextRestaurant.starsAverage = nextRestaurant.ratings.stars;
+            
+            
             
             console.log(nextRestaurant);
             
             this.restaurants.push(nextRestaurant);
             $(".card").remove();       
             this.displayInfoWindow();
-            
-            
-            this.addForm();
-            this.addReview();
-  
-        
             this.toggleRestaurant();
+            
+            //$(`#info${nextRestaurant.id} .card-body`).append(`Note : ${starValue.length} <br> Commentaire : ${comment} <br><br>`);
+            
             $("#nextForm")[0].reset(); 
         });
     }
@@ -165,7 +199,7 @@ class Maps {
     
     addStars() {
         return `
-            <form>
+            <form id="starsForm">
               <div class='rating-stars text-center'>
                 <ul id='stars' class="restaurantRatings">
                   <li class='star' data-value='1'>
@@ -189,7 +223,14 @@ class Maps {
         `;
     }
     
-    newRestaurantForm() {
+    addComment(test) {        
+        return `
+                <label for="formControlTextarea${test}">Commentaire :</label>
+                <textarea class="form-control" id="formControlTextarea${test}" rows="3"></textarea>
+        `;
+    }
+    
+    newRestaurantForm() {        
         return `
             <div class="modal-body jumbotron">
               <form id="nextForm" role="form">
@@ -199,7 +240,8 @@ class Maps {
                 <div class="form-group">
                   <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse"/>
                 </div>
-                <div class="form-group" id="rateStars"></div>
+                <div class="form-group" id="rateComment"></div>
+                <div class="form-group" id="rateStars">${this.addStars()}</div>
             </div>
                 <button type="button" id="cancelRestaurant" class="btn btn-danger" data-dismiss="modal">Annuler</button>
                 <button type="button" id="validRestaurant" class="btn btn-success" data-dismiss="modal">Ajouter</button>
@@ -271,33 +313,35 @@ class Maps {
 
 let map;
 
+
 function initMap() {
-    let reims = new google.maps.LatLng(49.2535299, 3.9850489);
-    
-    const iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-    
-    const request = {
-        location: reims,
-        radius: 10000,
-        type: ['restaurant']
-    }
-    
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: reims,
-        zoom: 12
-    });
+    let myPosition = new google.maps.LatLng(49.2535299, 3.9850489);
+    let app;
     
     navigator.geolocation.getCurrentPosition(function(position) {
-        reims = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        myPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    
+        const iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+
+        const request = {
+            location: myPosition,
+            radius: 10000,
+            type: ['restaurant']
+        }
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: myPosition,
+            zoom: 12
+        });
         
         const marker = new google.maps.Marker({
-            position: reims,
+            position: myPosition,
             map: map,
             icon: iconBase + 'library_maps.png',
         });
-    });
     
-    const app = new Application(map, request);
+        app = new Application(map, request); 
+    });
 
     document.addEventListener("restaurantLoaded", () => {
         const readMap = new Maps(app.listRestaurants);
@@ -309,7 +353,7 @@ function initMap() {
         $('#loadingModal').modal('show');
         $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
         
-        setTimeout(() => {
+        //setTimeout(() => {
         
             readMap.displayInfoWindow();
             readMap.addForm();
@@ -321,9 +365,8 @@ function initMap() {
         
             map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);
-                readMap.validForm(event.latLng);
             });
-        
-        }, 10000);
+            
+        //}, 10000);
     }); 
 }
