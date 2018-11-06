@@ -24,9 +24,7 @@ class Maps {
     }
     
     cancelForm(marker) {
-        $("#cancelRestaurant").one('click', (e) => {
-            // Selectionner le dernier marker
-            
+        $("#cancelRestaurant").click((e) => {            
             $.each(this.markers, function(index, value) {  
                 value.setVisible(false);
             });
@@ -36,14 +34,13 @@ class Maps {
             $.each(this.markers, function(index, value) {  
                 value.setVisible(true);
             });
-            //this.markers[test].visible(true);
-
-            console.log(this.markers);
+            
+            this.removeModal();
         });
     }
     
     validForm(event) {     
-        $("#validRestaurant").one('click', (e) => {
+        $("#validRestaurant").click((e) => {
             const nextRestaurant = new Restaurant();
             const starValue = $("#stars .selected");
             let comment;
@@ -74,7 +71,9 @@ class Maps {
             nextRestaurant.ratings = object;            
             nextRestaurant.starsAverage = nextRestaurant.ratings.stars;
             
-            
+            if(nextRestaurant.starsAverage == 0) {
+                nextRestaurant.starsAverage = 1;
+            }
             
             console.log(nextRestaurant);
             
@@ -86,7 +85,13 @@ class Maps {
             //$(`#info${nextRestaurant.id} .card-body`).append(`Note : ${starValue.length} <br> Commentaire : ${comment} <br><br>`);
             
             $("#nextForm")[0].reset(); 
+            this.removeModal();
+            this.addReview();
         });
+    }
+    
+    removeModal() {
+        $("#newRestaurant").modal('hide').remove();
     }
     
     toggleRestaurant() {
@@ -178,6 +183,7 @@ class Maps {
                                 <label for="formControlTextarea${value.id}">Commentaire :</label>
                                 <textarea class="form-control" id="formControlTextarea${value.id}" rows="3"></textarea>
                               </div>
+                              ${this.addStars()}
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
@@ -191,10 +197,6 @@ class Maps {
                 </div>
             `);
         });
-    }
-    
-    addForm() {
-        $('.modal-body').append(this.addStars());
     }
     
     addStars() {
@@ -223,10 +225,10 @@ class Maps {
         `;
     }
     
-    addComment(test) {        
+    addComment(id) {        
         return `
-                <label for="formControlTextarea${test}">Commentaire :</label>
-                <textarea class="form-control" id="formControlTextarea${test}" rows="3"></textarea>
+            <label for="formControlTextarea${id}">Commentaire :</label>
+            <textarea class="form-control" id="formControlTextarea${id}" rows="3"></textarea>
         `;
     }
     
@@ -300,6 +302,8 @@ class Maps {
                 const json = `{"stars":${rate}, "comment":"${comment}"}`;
                 const object = JSON.parse(json);
                 
+                console.log(this.restaurants[index].ratings);
+                
                 this.restaurants[index].ratings.push(object);
                 this.restaurants[index].sortByRating();
 
@@ -356,12 +360,11 @@ function initMap() {
         //setTimeout(() => {
         
             readMap.displayInfoWindow();
-            readMap.addForm();
             readMap.addReview();
 
             app.clickStars(readMap, map);
             
-            $('#loadingModal').modal('hide');
+            $('#loadingModal').modal('hide').remove();
         
             map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);

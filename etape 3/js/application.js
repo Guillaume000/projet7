@@ -79,7 +79,6 @@ class Application {
                         });
                         
                         readMap.displayInfoWindow();
-                        readMap.addForm();
                         readMap.addReview();
                     }
                 }
