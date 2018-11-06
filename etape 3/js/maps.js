@@ -68,22 +68,24 @@ class Maps {
             json = `{"stars":${starValue.length}, "comment":"${comment}"}`;
             object = JSON.parse(json);
 
-            nextRestaurant.ratings = object;            
-            nextRestaurant.starsAverage = nextRestaurant.ratings.stars;
+            nextRestaurant.ratings = [];   
+            nextRestaurant.ratings.push(object);
+            nextRestaurant.starsAverage = nextRestaurant.ratings[0].stars;
             
             if(nextRestaurant.starsAverage == 0) {
                 nextRestaurant.starsAverage = 1;
-            }
+            } 
+            
+            if(nextRestaurant.starsAverage > 5) {
+                nextRestaurant.starsAverage = 5;
+            } 
             
             console.log(nextRestaurant);
             
             this.restaurants.push(nextRestaurant);
             $(".card").remove();       
             this.displayInfoWindow();
-            this.toggleRestaurant();
-            
-            //$(`#info${nextRestaurant.id} .card-body`).append(`Note : ${starValue.length} <br> Commentaire : ${comment} <br><br>`);
-            
+            this.toggleRestaurant();            
             $("#nextForm")[0].reset(); 
             this.removeModal();
             this.addReview();
@@ -302,9 +304,7 @@ class Maps {
                 const json = `{"stars":${rate}, "comment":"${comment}"}`;
                 const object = JSON.parse(json);
                 
-                console.log(this.restaurants[index].ratings);
-                
-                this.restaurants[index].ratings.push(object);
+                this.restaurants[index].ratings.push(object);                
                 this.restaurants[index].sortByRating();
 
                 document.getElementById("restaurantRate" + restaurantId).textContent = this.restaurants[index].starsAverage;
