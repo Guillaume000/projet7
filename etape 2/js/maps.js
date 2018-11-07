@@ -3,7 +3,7 @@ class Maps {
         this.restaurants = restaurants;
         this.markers = [];
     }
-
+    
     createMarkers(map, markers) {
         $.each(this.restaurants, (index, value) => {
             const marker = new google.maps.Marker({
@@ -18,15 +18,7 @@ class Maps {
             });
         });
     }
-
-    addMarker(location, map, ...markers) {
-        const marker = new google.maps.Marker({
-            position: location,
-            map: map
-        });
-        markers.push(marker);
-    }
-
+    
     setMapOnAll(map) {
         for (var i = 0; i < this.markers.length; i++) {
             this.markers[i].setMap(map);
@@ -40,6 +32,106 @@ class Maps {
     deleteMarkers() {
         this.clearMarkers();
         this.markers = [];
+    }
+
+    addMarker(location, map) {
+        const marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+
+        $("#info").append(`<div class="modal" id="newRestaurant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">${this.newRestaurantForm()}</div>`);
+
+        this.addReview();
+
+        $('#rateComment').html(this.addComment(this.restaurants.length));
+        $('#newRestaurant').modal('show');
+
+        this.validForm(marker.position);
+        this.cancelForm(marker);
+
+        this.markers.push(marker);
+    }
+
+    cancelForm(marker) {
+        $("#cancelRestaurant").click((e) => {            
+            $.each(this.markers, function(index, value) {  
+                value.setVisible(false);
+            });
+
+            this.markers.pop();
+
+            $.each(this.markers, function(index, value) {  
+                value.setVisible(true);
+            });
+
+            this.removeModal();
+        });
+    }
+
+    validForm(event) {     
+        $("#validRestaurant").click((e) => {
+            const nextRestaurant = new Restaurant();
+            const starValue = $("#stars .selected");
+            let comment;
+            let json;
+            let object;
+
+            nextRestaurant.name = $("#restaurantName").val();
+            nextRestaurant.address = $("#restaurantAddress").val();
+            nextRestaurant.position = {"lat":event.lat(), "lng":event.lng()};
+            nextRestaurant.pic = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${nextRestaurant.position}&fov=90&heading=235&pitch=10`;
+
+            $.each(this.restaurants, (index, value) => {
+                nextRestaurant.id = index + 1;
+            });
+
+            $.each(this.markers, (index, value) => {
+                nextRestaurant.marker = value;
+            });
+
+            starValue.each(function () {
+                $(this).is("[data-value=5]:last")
+            });
+
+            comment = $(`#formControlTextarea${nextRestaurant.id}`).val();
+            json = `{"stars":${starValue.length}, "comment":"${comment}"}`;
+            object = JSON.parse(json);
+
+            nextRestaurant.ratings = [];   
+            nextRestaurant.ratings.push(object);
+            nextRestaurant.starsAverage = nextRestaurant.ratings[0].stars;
+
+            if(nextRestaurant.starsAverage == 0) {
+                nextRestaurant.starsAverage = 1;
+            } 
+
+            if(nextRestaurant.starsAverage > 5) {
+                nextRestaurant.starsAverage = 5;
+            } 
+
+            console.log(nextRestaurant);
+
+            this.restaurants.push(nextRestaurant);
+            $(".card").remove();       
+            this.displayInfoWindow();
+            this.toggleRestaurant();            
+            $("#nextForm")[0].reset(); 
+            this.removeModal();
+            this.addReview();
+        });
+    }
+
+    removeModal() {
+        $("#newRestaurant").modal('hide').remove();
+    }
+
+    toggleRestaurant() {
+        $.each(this.markers, (index, value) => {
+            value.addListener('click', () => {
+                $(`#collapse${this.restaurants.length - 1}`).collapse('toggle'); 
+            });
+        });
     }
 
     displayList() {
@@ -67,7 +159,7 @@ class Maps {
         const array = [];
 
         $.each(this.displayList(), (index, value) => {
-            imageUrl = `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${this.restaurants[index].position.lat},${this.restaurants[index].position.lng}&fov=90&heading=235&pitch=10`;
+            imageUrl = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${this.restaurants[index].position.lat},${this.restaurants[index].position.lng}&fov=90&heading=235&pitch=10`;
 
             infoWindow = new google.maps.InfoWindow({
                 content: `<div class="card" style="width: 22rem;">
@@ -83,8 +175,7 @@ class Maps {
     }
 
     displayInfoWindow() {
-        let template;
-        let infoWindows = this.createInfoWindow();
+        const infoWindows = this.createInfoWindow();
 
         $.each(this.restaurants, (index, value) => {
             $("#restaurantAccordion").append(`
@@ -115,6 +206,7 @@ class Maps {
                                 <label for="formControlTextarea${index}">Commentaire :</label>
                                 <textarea class="form-control" id="formControlTextarea${index}" rows="3"></textarea>
                               </div>
+                            ${this.addStars()}
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
@@ -128,14 +220,13 @@ class Maps {
                 </div>
             `);
         });
-        return template;
     }
     
-    addForm() {
-        $('.modal-body').append(`
-            <form>
+    addStars() {
+        return `
+            <form id="starsForm">
               <div class='rating-stars text-center'>
-                <ul id='stars'>
+                <ul id='stars' class="restaurantRatings">
                   <li class='star' data-value='1'>
                     <i class='fa fa-star fa-fw'></i>
                   </li>
@@ -154,12 +245,38 @@ class Maps {
                 </ul>
               </div>
             </form>
-        `);
+        `;
     }
     
+    addComment(id) {        
+        return `
+            <label for="formControlTextarea${id}">Commentaire :</label>
+            <textarea class="form-control" id="formControlTextarea${id}" rows="3"></textarea>
+        `;
+    }
+
+    newRestaurantForm() {        
+        return `
+            <div class="modal-body jumbotron">
+              <form id="nextForm" role="form">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="restaurantName" placeholder="Nom du restaurant"/>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse"/>
+                </div>
+                <div class="form-group" id="rateComment"></div>
+                <div class="form-group" id="rateStars">${this.addStars()}</div>
+            </div>
+            <button type="button" id="cancelRestaurant" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+            <button type="button" id="validRestaurant" class="btn btn-success" data-dismiss="modal">Ajouter</button>
+            </form>
+        `;
+    }
+
     addReview() {      
         const rate = [];
-        
+
         $('#stars li').on('mouseover', function() {
             const onStar = parseInt($(this).data('value'), 10);
 
@@ -177,7 +294,7 @@ class Maps {
                 $(this).removeClass('hover');
             });
         });
-        
+
         $('#stars li').on('click', function() {
             const onStar = parseInt($(this).data('value'), 10);
             const stars = $(this).parent().children('li.star');
@@ -189,30 +306,36 @@ class Maps {
             for(let j = 0; j < onStar; j++) {
                 $(stars[j]).addClass('selected');
             }
-            
+
             rate.push(onStar);
-            
+
             if(rate.length > 1) {
                 rate.shift();
             }
         });
-        
+
+        this.submitForm(rate);
+    }
+
+    submitForm(rate) {
         for(let k = 0; k < this.restaurants.length; k++) {
             $(`#review${k}`).click(() => {
                 const comment = $(`#formControlTextarea${k}`).val();
                 const json = `{"stars":${rate}, "comment":"${comment}"}`;
-                let object;
-                
-                object = JSON.parse(json);
+                const object = JSON.parse(json);
+
                 this.restaurants[k].ratings.push(object);
+                this.restaurants[k].sortByRating();
+                
                 $(`#info${k} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
             });
         }
     }
 }
 
+let map;
+
 function initMap() {
-    let map;
     const paris = new google.maps.LatLng(48.8737815, 2.3501649);
     const app = new Application('restaurant.json');
 
@@ -223,15 +346,14 @@ function initMap() {
 
     document.addEventListener("restaurantLoaded", () => {
         const readMap = new Maps(app.listRestaurants);
-        readMap.createMarkers(map);
+        
         readMap.displayInfoWindow();
-        app.clickStars(readMap, map);
+        readMap.addReview();
+        readMap.createMarkers(map);
+        app.clickStars(readMap, map, readMap.markers);
 
         map.addListener('click', function(event) {
             readMap.addMarker(event.latLng, map);
         });
-        
-        readMap.addForm();
-        readMap.addReview();
     });
 }

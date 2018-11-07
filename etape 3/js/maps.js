@@ -185,7 +185,7 @@ class Maps {
                                 <label for="formControlTextarea${value.id}">Commentaire :</label>
                                 <textarea class="form-control" id="formControlTextarea${value.id}" rows="3"></textarea>
                               </div>
-                              ${this.addStars()}
+                            ${this.addStars()}
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
@@ -358,18 +358,15 @@ function initMap() {
         $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
         
         //setTimeout(() => {
-        
             readMap.displayInfoWindow();
             readMap.addReview();
-
             app.clickStars(readMap, map);
             
             $('#loadingModal').modal('hide').remove();
         
             map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);
-            });
-            
+            });  
         //}, 10000);
     }); 
 }

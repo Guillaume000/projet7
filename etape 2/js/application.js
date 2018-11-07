@@ -27,7 +27,7 @@ class Application {
         return list;
     }
 
-    clickStars(map, markers) {
+    clickStars(map, markers, newMarkers) {
         const list = this.listRestaurants;
         let average;
 
@@ -52,10 +52,9 @@ class Application {
                                 map.restaurants.push(value);
                             }
                         });
-
+                        
                         map.createMarkers(markers);
                         map.displayInfoWindow();
-                        map.addForm();
                         map.addReview();
                     }
                 }
