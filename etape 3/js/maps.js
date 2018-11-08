@@ -73,7 +73,7 @@ class Maps {
             nextRestaurant.ratings.push(object);
             nextRestaurant.starsAverage = nextRestaurant.ratings[0].stars;
             
-            if(nextRestaurant.starsAverage == 0) {
+            if(nextRestaurant.starsAverage < 1) {
                 nextRestaurant.starsAverage = 1;
             } 
             
@@ -239,7 +239,7 @@ class Maps {
             <div class="modal-body jumbotron">
               <form id="nextForm" role="form">
                 <div class="form-group">
-                  <input type="text" class="form-control" id="restaurantName" placeholder="Nom du restaurant"/>
+                  <input type="text" class="form-control" id="restaurantName" placeholder="Nom du restaurant" autofocus/>
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse"/>
