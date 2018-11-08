@@ -66,11 +66,18 @@ class Application {
                     $("#amount").html(ui.values[0] + "<i class=\"fas fa-star\"></i> - " + ui.values[1] + "<i class=\"fas fa-star\"></i>");
 
                     if(ui.value == ui.values[0] || ui.value == ui.values[1]) {
-                        $(".card").remove();                        
+                        $(".card").remove();    
+                        
+                        const concatRestaurant = list.concat(readMap.newRestaurants);
+                        
+                        const unique = concatRestaurant.filter(function(restaurantSelected, index, restaurantsTab) {
+                            return index === restaurantsTab.indexOf(restaurantSelected);
+                        });
+
                         readMap.restaurants = [];
 
-                        $.each(list, function(index, value) {  
-                            if(value.starsAverage >= ui.values[0] && value.starsAverage <= ui.values[1]) {
+                        $.each(unique, function(index, value) {                              
+                            if(value.starsAverage >= ui.values[0] && value.starsAverage <= ui.values[1]) {                           
                                 readMap.restaurants.push(value);
                                 value.marker.setVisible(true);
                             } else {

@@ -1,6 +1,7 @@
 class Maps {
     constructor(restaurants) {
         this.restaurants = restaurants;
+        this.newRestaurants = [];
         this.markers = [];
     }
 
@@ -60,12 +61,12 @@ class Maps {
                 nextRestaurant.marker = value;
             });
             
-            starValue.each(function () {
-                $(this).is("[data-value=5]:last")
+            comment = $(`#formControlTextarea${nextRestaurant.id}`).val();
+            
+            $.each(starValue, (index, value) => {
+                json = `{"stars":${starValue[index].dataset.value}, "comment":"${comment}"}`;
             });
             
-            comment = $(`#formControlTextarea${nextRestaurant.id}`).val();
-            json = `{"stars":${starValue.length}, "comment":"${comment}"}`;
             object = JSON.parse(json);
 
             nextRestaurant.ratings = [];   
@@ -80,13 +81,12 @@ class Maps {
                 nextRestaurant.starsAverage = 5;
             } 
             
-            console.log(nextRestaurant);
-            
+            this.newRestaurants.push(nextRestaurant);            
             this.restaurants.push(nextRestaurant);
+            
             $(".card").remove();       
             this.displayInfoWindow();
             this.toggleRestaurant();            
-            $("#nextForm")[0].reset(); 
             this.removeModal();
             this.addReview();
         });
@@ -316,7 +316,6 @@ class Maps {
 }
 
 let map;
-
 
 function initMap() {
     let myPosition = new google.maps.LatLng(49.2535299, 3.9850489);

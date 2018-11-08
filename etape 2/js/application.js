@@ -27,7 +27,7 @@ class Application {
         return list;
     }
 
-    clickStars(map, markers, newMarkers) {
+    clickStars(map, markers) {
         const list = this.listRestaurants;
         let average;
 
@@ -42,10 +42,17 @@ class Application {
 
                     if(ui.value == ui.values[0] || ui.value == ui.values[1]) {
                         $(".card").remove();
+                        
+                        const concatRestaurant = list.concat(map.newRestaurants);
+
+                        const unique = concatRestaurant.filter(function(restaurantSelected, index, restaurantsTab) {
+                            return index === restaurantsTab.indexOf(restaurantSelected);
+                        });
+                        
                         map.restaurants = [];
                         map.deleteMarkers();
-
-                        $.each(list, function(index, value) {
+                        
+                        $.each(unique, function(index, value) {
                             average = Math.round(this.sortByRating() * 10) / 10;
 
                             if(average >= ui.values[0] && average <= ui.values[1]) {
