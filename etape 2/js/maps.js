@@ -330,7 +330,10 @@ class Maps {
 
     submitForm(rate) {
         for(let k = 0; k < this.restaurants.length; k++) {
-            $(`#review${k}`).click(() => {
+            $(`#review${k}`).click((e) => {
+                e.stopImmediatePropagation();
+                $(`#modal${k}`).modal('hide');
+                
                 if(rate.length == 0) {
                     const etoiles = $("#stars .selected").attr('data-value');
                     rate.push(etoiles);

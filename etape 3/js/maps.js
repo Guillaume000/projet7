@@ -230,10 +230,10 @@ class Maps {
             <div class="modal-body jumbotron">
               <form id="nextForm" role="form">
                 <div class="form-group">
-                  <input type="text" class="form-control" id="restaurantName" placeholder="Nom du restaurant" autofocus/>
+                  <input type="text" class="form-control" id="restaurantName" placeholder="Nom du restaurant" autofocus required/>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse"/>
+                  <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse" required/>
                 </div>
                 <div class="form-group" id="rateComment"></div>
                 <div class="form-group" id="rateStars">${this.addStars()}</div>
@@ -310,10 +310,13 @@ class Maps {
     submitForm(rate) {
         $.each(this.restaurants, (index, value) => {
             const restaurantId = this.restaurants[index].id;
-            $(`#review${restaurantId}`).click(() => {
+            $(`#review${restaurantId}`).click((e) => {
+                e.stopImmediatePropagation();
+                $(`#modal${restaurantId}`).modal('hide');
+                
                 if(rate.length == 0) {
-                    const etoiles = $("#stars .selected").attr('data-value');
-                    rate.push(etoiles);
+                    const newStars = $("#stars .selected").attr('data-value');
+                    rate.push(newStars);
                 }
                 
                 const comment = $(`#formControlTextarea${restaurantId}`).val();
@@ -372,7 +375,7 @@ function initMap() {
         $('#loadingModal').modal('show');
         $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
         
-        //setTimeout(() => {
+        setTimeout(() => {
             readMap.displayInfoWindow();
             readMap.addReview();
             app.clickStars(readMap, map);
@@ -382,6 +385,6 @@ function initMap() {
             map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);
             });  
-        //}, 10000);
+        }, 10000);
     }); 
 }
