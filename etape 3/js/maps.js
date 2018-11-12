@@ -13,83 +13,74 @@ class Maps {
         
         $("#info").append(`<div class="modal" id="newRestaurant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">${this.newRestaurantForm()}</div>`);
         
+        this.submitNewRestaurant(marker);
         this.addReview();
-        
         $('#rateComment').html(this.addComment(this.restaurants.length));
         $('#newRestaurant').modal('show');
-        
-        this.validForm(marker.position);
-        this.cancelForm(marker);
-        
-        this.markers.push(marker);
     }
     
-    cancelForm(marker) {
-        $("#cancelRestaurant").click((e) => {            
-            $.each(this.markers, function(index, value) {  
-                value.setVisible(false);
-            });
-            
-            this.markers.pop();
-            
-            $.each(this.markers, function(index, value) {  
-                value.setVisible(true);
-            });
-            
-            this.removeModal();
+    cancelForm(marker) {          
+        $.each(this.markers, function(index, value) {  
+            value.setVisible(false);
         });
+
+        this.markers.pop();
+
+        $.each(this.markers, function(index, value) {  
+            value.setVisible(true);
+        });
+
+        this.removeModal();
     }
     
     validForm(event) {     
-        $("#validRestaurant").click((e) => {
-            const nextRestaurant = new Restaurant();
-            const starValue = $("#stars .selected");
-            let comment;
-            let json;
-            let object;
-            
-            nextRestaurant.name = $("#restaurantName").val();
-            nextRestaurant.address = $("#restaurantAddress").val();
-            nextRestaurant.position = {"lat":event.lat(), "lng":event.lng()};
-            nextRestaurant.pic = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${nextRestaurant.position}&fov=90&heading=235&pitch=10`;
+        const nextRestaurant = new Restaurant();
+        const starValue = $("#stars .selected");
+        let comment;
+        let json;
+        let object;
 
-            $.each(this.restaurants, (index, value) => {
-                nextRestaurant.id = index + 1;
-            });
-            
-            $.each(this.markers, (index, value) => {
-                nextRestaurant.marker = value;
-            });
-            
-            comment = $(`#formControlTextarea${nextRestaurant.id}`).val();
-            
-            $.each(starValue, (index, value) => {
-                json = `{"stars":${starValue[index].dataset.value}, "comment":"${comment}"}`;
-            });
-            
-            object = JSON.parse(json);
+        nextRestaurant.name = $("#restaurantName").val();
+        nextRestaurant.address = $("#restaurantAddress").val();
+        nextRestaurant.position = {"lat":event.lat(), "lng":event.lng()};
+        nextRestaurant.pic = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${nextRestaurant.position}&fov=90&heading=235&pitch=10`;
 
-            nextRestaurant.ratings = [];   
-            nextRestaurant.ratings.push(object);
-            nextRestaurant.starsAverage = nextRestaurant.ratings[0].stars;
-            
-            if(nextRestaurant.starsAverage < 1) {
-                nextRestaurant.starsAverage = 1;
-            } 
-            
-            if(nextRestaurant.starsAverage > 5) {
-                nextRestaurant.starsAverage = 5;
-            } 
-            
-            this.newRestaurants.push(nextRestaurant);            
-            this.restaurants.push(nextRestaurant);
-            
-            $(".card").remove();       
-            this.displayInfoWindow();
-            this.toggleRestaurant();            
-            this.removeModal();
-            this.addReview();
+        $.each(this.restaurants, (index, value) => {
+            nextRestaurant.id = index + 1;
         });
+
+        $.each(this.markers, (index, value) => {
+            nextRestaurant.marker = value;
+        });
+
+        comment = $(`#formControlTextarea${nextRestaurant.id}`).val();
+
+        $.each(starValue, (index, value) => {
+            json = `{"stars":${starValue[index].dataset.value}, "comment":"${comment}"}`;
+        });
+
+        object = JSON.parse(json);
+
+        nextRestaurant.ratings = [];   
+        nextRestaurant.ratings.push(object);
+        nextRestaurant.starsAverage = nextRestaurant.ratings[0].stars;
+
+        if(nextRestaurant.starsAverage < 1) {
+            nextRestaurant.starsAverage = 1;
+        } 
+
+        if(nextRestaurant.starsAverage > 5) {
+            nextRestaurant.starsAverage = 5;
+        } 
+
+        this.newRestaurants.push(nextRestaurant);            
+        this.restaurants.push(nextRestaurant);
+
+        $(".card").remove();       
+        this.displayInfoWindow();
+        this.toggleRestaurant();            
+        this.removeModal();
+        this.addReview();
     }
     
     removeModal() {
@@ -206,7 +197,7 @@ class Maps {
             <form id="starsForm">
               <div class='rating-stars text-center'>
                 <ul id='stars' class="restaurantRatings">
-                  <li class='star' data-value='1'>
+                  <li class='star selected' data-value='1'>
                     <i class='fa fa-star fa-fw'></i>
                   </li>
                   <li class='star' data-value='2'>
@@ -251,6 +242,26 @@ class Maps {
                 <button type="button" id="validRestaurant" class="btn btn-success" data-dismiss="modal">Ajouter</button>
               </form>
         `;
+    }
+    
+    submitNewRestaurant(marker) {
+        this.markers.push(marker);
+        
+        $('#validRestaurant').on('click', (e) => {
+            if($('#restaurantName').val().trim() != "" && $('#restaurantAddress').val().trim() != "") {
+                this.validForm(marker.position);
+            } else {
+                this.cancelForm(marker);
+                e.preventDefault();
+            }
+        });
+        
+        $('#cancelRestaurant').on('click', (e) => {
+            if($('#restaurantName').val().trim() == "" && $('#restaurantAddress').val().trim() == "") {
+                this.cancelForm(marker);
+                e.preventDefault();
+            }
+        });
     }
     
     addReview() {      
@@ -300,6 +311,11 @@ class Maps {
         $.each(this.restaurants, (index, value) => {
             const restaurantId = this.restaurants[index].id;
             $(`#review${restaurantId}`).click(() => {
+                if(rate.length == 0) {
+                    const etoiles = $("#stars .selected").attr('data-value');
+                    rate.push(etoiles);
+                }
+                
                 const comment = $(`#formControlTextarea${restaurantId}`).val();
                 const json = `{"stars":${rate}, "comment":"${comment}"}`;
                 const object = JSON.parse(json);
