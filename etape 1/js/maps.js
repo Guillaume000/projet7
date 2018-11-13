@@ -59,7 +59,7 @@ class Maps {
         const array = [];
 
         $.each(this.displayList(), (index, value) => {
-            imageUrl = `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${this.restaurants[index].position.lat},${this.restaurants[index].position.lng}&fov=90&heading=235&pitch=10`;
+            imageUrl = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${this.restaurants[index].position.lat},${this.restaurants[index].position.lng}&fov=90&heading=235&pitch=10`;
 
             infoWindow = new google.maps.InfoWindow({
                 content: `<div class="card" style="width: 22rem;">
@@ -103,14 +103,28 @@ class Maps {
 
 function initMap() {
     let map;
-    const paris = new google.maps.LatLng(48.8737815, 2.3501649);
-    const app = new Application('restaurant.json');
+    let app;
+    let myPosition = new google.maps.LatLng(48.8737815, 2.3501649);
+    
+    navigator.geolocation.getCurrentPosition(function(position) {
+        myPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: paris,
-        zoom: 12
+        const iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: myPosition,
+            zoom: 12
+        });
+
+        const marker = new google.maps.Marker({
+            position: myPosition,
+            map: map,
+            icon: iconBase + 'library_maps.png',
+        });
+        
+        app = new Application('restaurant.json');
     });
-
+    
     document.addEventListener("restaurantLoaded", () => {
         const readMap = new Maps(app.listRestaurants);
         readMap.createMarkers(map);

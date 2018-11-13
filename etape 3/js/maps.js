@@ -405,7 +405,7 @@ function initMap() {
         $('#loadingModal').modal('show');
         $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
         
-        //setTimeout(() => {
+        setTimeout(() => {
             readMap.displayInfoWindow();
             readMap.addReview();
             app.clickStars(readMap, map);
@@ -415,6 +415,6 @@ function initMap() {
             map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);
             });  
-        //}, 10000);
+        }, 10000);
     }); 
 }

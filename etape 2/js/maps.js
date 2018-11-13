@@ -382,15 +382,28 @@ class Maps {
     }
 }
 
-let map;
-
 function initMap() {
-    const paris = new google.maps.LatLng(48.8737815, 2.3501649);
-    const app = new Application('restaurant.json');
+    let map;
+    let app;
+    let myPosition = new google.maps.LatLng(48.8737815, 2.3501649);
 
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: paris,
-        zoom: 12
+    navigator.geolocation.getCurrentPosition(function(position) {
+        myPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+        const iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: myPosition,
+            zoom: 12
+        });
+
+        const marker = new google.maps.Marker({
+            position: myPosition,
+            map: map,
+            icon: iconBase + 'library_maps.png',
+        });
+
+        app = new Application('restaurant.json');
     });
 
     document.addEventListener("restaurantLoaded", () => {
