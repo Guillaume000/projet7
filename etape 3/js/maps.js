@@ -225,15 +225,15 @@ class Maps {
         `;
     }
     
-    newRestaurantForm() {        
+    newRestaurantForm() {          
         return `
             <div class="modal-body jumbotron">
               <form id="nextForm" role="form">
                 <div class="form-group">
-                  <input type="text" class="form-control" id="restaurantName" placeholder="Nom du restaurant" autofocus required/>
+                  <input type="text" class="form-control" id="restaurantName" placeholder="Nom du restaurant" autofocus/>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse" required/>
+                  <input type="text" class="form-control" id="restaurantAddress" placeholder="Adresse"/>
                 </div>
                 <div class="form-group" id="rateComment"></div>
                 <div class="form-group" id="rateStars">${this.addStars()}</div>
@@ -244,9 +244,41 @@ class Maps {
         `;
     }
     
+    checkForm() {
+        if($('#restaurantName').val().trim() == "" && $('#restaurantAddress').val().trim() == "") {
+            $('#validRestaurant').prop('disabled', true);
+        }
+
+        $('#restaurantName').keyup(() => {
+            if(!$('#restaurantName').val()) {
+                $('#restaurantName').css('border', '4px solid red');
+                $('#validRestaurant').prop('disabled', true);
+            } else {
+                $('#restaurantName').css('border', '4px solid green');
+            }
+        });
+
+        $('#restaurantAddress').keyup(() => {
+            if(!$('#restaurantAddress').val()) {
+                $('#restaurantAddress').css('border', '4px solid red');
+                $('#validRestaurant').prop('disabled', true);
+            } else {
+                $('#restaurantAddress').css('border', '4px solid green');
+            }
+        });
+
+        $('#restaurantName, #restaurantAddress').keyup(() => {
+            if($('#restaurantName').val().trim() != "" && $('#restaurantAddress').val().trim() != "") {
+                $('#validRestaurant').prop('disabled', false);
+            }
+        });
+    }
+    
     submitNewRestaurant(marker) {
         this.markers.push(marker);
         
+        this.checkForm();
+
         $('#validRestaurant').on('click', (e) => {
             if($('#restaurantName').val().trim() != "" && $('#restaurantAddress').val().trim() != "") {
                 this.validForm(marker.position);
@@ -257,10 +289,8 @@ class Maps {
         });
         
         $('#cancelRestaurant').on('click', (e) => {
-            if($('#restaurantName').val().trim() == "" && $('#restaurantAddress').val().trim() == "") {
-                this.cancelForm(marker);
-                e.preventDefault();
-            }
+            this.cancelForm(marker);
+            e.preventDefault();
         });
     }
     
@@ -375,7 +405,7 @@ function initMap() {
         $('#loadingModal').modal('show');
         $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
         
-        setTimeout(() => {
+        //setTimeout(() => {
             readMap.displayInfoWindow();
             readMap.addReview();
             app.clickStars(readMap, map);
@@ -385,6 +415,6 @@ function initMap() {
             map.addListener('click', function(event) {
                 readMap.addMarker(event.latLng, map);
             });  
-        }, 10000);
+        //}, 10000);
     }); 
 }

@@ -265,8 +265,40 @@ class Maps {
         `;
     }
     
+    checkForm() {
+        if($('#restaurantName').val().trim() == "" && $('#restaurantAddress').val().trim() == "") {
+            $('#validRestaurant').prop('disabled', true);
+        }
+
+        $('#restaurantName').keyup(() => {
+            if(!$('#restaurantName').val()) {
+                $('#restaurantName').css('border', '4px solid red');
+                $('#validRestaurant').prop('disabled', true);
+            } else {
+                $('#restaurantName').css('border', '4px solid green');
+            }
+        });
+
+        $('#restaurantAddress').keyup(() => {
+            if(!$('#restaurantAddress').val()) {
+                $('#restaurantAddress').css('border', '4px solid red');
+                $('#validRestaurant').prop('disabled', true);
+            } else {
+                $('#restaurantAddress').css('border', '4px solid green');
+            }
+        });
+
+        $('#restaurantName, #restaurantAddress').keyup(() => {
+            if($('#restaurantName').val().trim() != "" && $('#restaurantAddress').val().trim() != "") {
+                $('#validRestaurant').prop('disabled', false);
+            }
+        });
+    }
+
     submitNewRestaurant(marker) {
         this.markers.push(marker);
+
+        this.checkForm();
 
         $('#validRestaurant').on('click', (e) => {
             if($('#restaurantName').val().trim() != "" && $('#restaurantAddress').val().trim() != "") {
@@ -278,10 +310,8 @@ class Maps {
         });
 
         $('#cancelRestaurant').on('click', (e) => {
-            if($('#restaurantName').val().trim() == "" && $('#restaurantAddress').val().trim() == "") {
-                this.cancelForm(marker);
-                e.preventDefault();
-            }
+            this.cancelForm(marker);
+            e.preventDefault();
         });
     }
 
