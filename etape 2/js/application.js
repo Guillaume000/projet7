@@ -3,6 +3,15 @@ class Application {
         this.listRestaurants = this.getRestaurants(url);
     }
 
+    /** 
+    * Récupère la liste des restaurants
+    *
+    * @param {string} url l'adresse pour récupérer les restaurants
+    * @param {tab} list le tableau qui contient la liste de restaurants
+    *
+    * @return {tab} 
+    **/
+    
     getRestaurants(url, ...list) {
         $.ajax({
             url: url,
@@ -19,6 +28,7 @@ class Application {
 
                     list.push(restaurant);
                 });
+                
                 const loaded = new Event("restaurantLoaded", {bubbles:true});
                 document.dispatchEvent(loaded);
             },
@@ -26,21 +36,31 @@ class Application {
         });
         return list;
     }
+    
+    /** 
+    * Filtre les restaurants sur la carte et dans la liste grâce aux notes
+    *
+    * @param {object} readMap la carte qui contient les marqueurs
+    * @param {object} map permet de récupérer la liste des restaurants pour la localisation
+    **/
 
     clickStars(map, markers) {
         const list = this.listRestaurants;
         let average;
 
         $(function() {
-            $("#slider-range").slider({
+            
+            $(".slider").slider({
                 range: true,
                 min: 1,
                 max: 5,
                 values: [1, 5],
                 slide: function(event, ui) {
-                    $("#amount").html(ui.values[0] + "<i class=\"fas fa-star\"></i> - " + ui.values[1] + "<i class=\"fas fa-star\"></i>");
+                    
+                    $(".gAmount").html(ui.values[0] + "<i class=\"fas fa-star\"></i> - " + ui.values[1] + "<i class=\"fas fa-star\"></i>");
 
                     if(ui.value == ui.values[0] || ui.value == ui.values[1]) {
+                        
                         $(".card").remove();
                         
                         const concatRestaurant = list.concat(map.newRestaurants);
@@ -67,7 +87,7 @@ class Application {
                 }
             });
 
-            $("#amount").html($("#slider-range").slider("values", 0) + "<i class=\"fas fa-star\"></i> - " + $("#slider-range").slider("values", 1) + "<i class=\"fas fa-star\"></i>");
+            $(".gAmount").html($(".slider").slider("values", 0) + "<i class=\"fas fa-star\"></i> - " + $(".slider").slider("values", 1) + "<i class=\"fas fa-star\"></i>");
         });
     }
 }

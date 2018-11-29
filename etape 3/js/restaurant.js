@@ -8,6 +8,12 @@ class Restaurant {
         this.starsAverage = starsAverage;
         this.id = id;
     }
+    
+    /** 
+    * Calcule la moyenne des notes d'un restaurant
+    *
+    * @return {number} this.starsAverage
+    **/
 
     sortByRating() {
         const reducer = (accumulator, currentValue) => accumulator + currentValue;

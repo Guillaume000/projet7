@@ -4,6 +4,13 @@ class Maps {
         this.newRestaurants = [];
         this.markers = [];
     }
+    
+    /** 
+    * Créer le marqueur d'un nouveau restaurant
+    *
+    * @param {object} location = latitude et longitude d'un marqueur
+    * @param {object} map correspond à la carte pour pouvoir placer les marqueurs
+    **/
 
     addMarker(location, map) {
         const marker = new google.maps.Marker({
@@ -15,11 +22,17 @@ class Maps {
         
         this.submitNewRestaurant(marker);
         this.addReview();
+        
         $('#rateComment').html(this.addComment(this.restaurants.length));
+        
         $('#newRestaurant').modal('show');
     }
     
-    cancelForm(marker) {          
+    /** 
+    * Annule le formulaire pour ajouter un nouveau restaurant (annule également son marqueur)
+    **/
+    
+    cancelForm() {          
         $.each(this.markers, function(index, value) {  
             value.setVisible(false);
         });
@@ -33,15 +46,24 @@ class Maps {
         this.removeModal();
     }
     
+    /** 
+    * Valide la création d'un nouveau marqueur et d'un nouveau restaurant
+    *
+    * @param {object} event = latitude et longitude d'un marqueur
+    **/
+    
     validForm(event) {     
         const nextRestaurant = new Restaurant();
         const starValue = $("#stars .selected");
+        
         let comment;
         let json;
         let object;
 
         nextRestaurant.name = $("#restaurantName").val();
+        
         nextRestaurant.address = $("#restaurantAddress").val();
+        
         nextRestaurant.position = {"lat":event.lat(), "lng":event.lng()};
         nextRestaurant.pic = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${nextRestaurant.position}&fov=90&heading=235&pitch=10`;
 
@@ -76,7 +98,8 @@ class Maps {
         this.newRestaurants.push(nextRestaurant);            
         this.restaurants.push(nextRestaurant);
 
-        $(".card").remove();       
+        $(".card").remove();   
+        
         this.displayInfoWindow();
         this.toggleRestaurant();            
         this.removeModal();
@@ -95,16 +118,24 @@ class Maps {
         });
     }
     
+    /** 
+    * Affiche les détails d'un restaurant (Nom, Adresse, Notes, Commentaires)
+    *
+    * @param {object} element = un restaurant
+    *
+    * @return {template} contentString contient un template HTML pour afficher les détails d'un restaurant
+    **/
+    
     createRestaurant(element) {
         let contentString = "";
         
-        contentString = `<ul><li>${element.name}</li>
+        contentString = `<ul class="noPadding"><li>${element.name}</li>
                          <li>Adresse : ${element.address}</li></ul>`;
 
         if(element.ratings != undefined) {
             for(let i = 0; i < element.ratings.length; i++) {
                 (function(i) {
-                    contentString += (`<ul><li>Note : ${element.ratings[i].stars}</li>
+                    contentString += (`<ul class="noPadding"><li>Note : ${element.ratings[i].stars}</li>
                          <li>Commentaire : ${element.ratings[i].comment}</li></ul>`);
                 })(i)
             }
@@ -112,6 +143,12 @@ class Maps {
         
         return contentString;
     }
+    
+    /** 
+    * Ajoute les restaurants dans un tableau pour pouvoir les afficher plus tard
+    *
+    * @return {tab} array tableau qui contient les restaurants
+    **/
     
     displayList() {
         const array = [];
@@ -122,6 +159,12 @@ class Maps {
         
         return array;
     }
+    
+    /** 
+    * Affiche les détails des restaurants (Image, contient également la structure HTML pour la méthode displayList)
+    *
+    * @return {tab} array contient un template HTML pour afficher les détails des restaurants
+    **/
 
     createInfoWindow() {
         let imageUrl;
@@ -143,17 +186,22 @@ class Maps {
         });
         return array;
     }
+    
+    /** 
+    * Ajoute les détails des restaurants dans l'élément #restaurantAccordion
+    **/
 
     displayInfoWindow() {
         const infoWindows = this.createInfoWindow();
 
         $.each(this.restaurants, (index, value) => {
+            
             $("#restaurantAccordion").append(`
                 <div class="card">
                   <div class="card-header" id="heading${value.id}">
                     <h5 class="mb-0">
                     <button id="restaurant${value.id}" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${value.id}" aria-expanded="true" aria-controls="collapse${value.id}">
-                        ${value.name} <span id="restaurantRate${value.id}">${value.starsAverage}</span> <i class="fas fa-star"></i><br>
+                        ${value.name} <span id="restaurantRate${value.id}">${value.starsAverage}</span> <i class="fas fa-star"></i>
                     </button>
                     </h5>
                   </div>
@@ -189,14 +237,19 @@ class Maps {
                   </div>
                 </div>
             `);
+            
         });
     }
+    
+    /** 
+    * Template HTML qui permet d'ajouter des notes sous forme d'étoiles
+    **/
     
     addStars() {
         return `
             <form id="starsForm">
               <div class='rating-stars text-center'>
-                <ul id='stars' class="restaurantRatings">
+                <ul id='stars' class="restaurantRatings noPadding">
                   <li class='star selected' data-value='1'>
                     <i class='fa fa-star fa-fw'></i>
                   </li>
@@ -218,12 +271,23 @@ class Maps {
         `;
     }
     
+    /** 
+    * Retourne un textarea pour ajouter un commentaire
+    *
+    * @param {number} id
+    * @return {template} 
+    **/
+    
     addComment(id) {        
         return `
             <label for="formControlTextarea${id}">Commentaire :</label>
             <textarea class="form-control" id="formControlTextarea${id}" rows="3"></textarea>
         `;
     }
+    
+    /** 
+    * Formulaire pour ajouter un nouveau restaurant
+    **/
     
     newRestaurantForm() {          
         return `
@@ -243,6 +307,10 @@ class Maps {
               </form>
         `;
     }
+    
+    /** 
+    * Permet de contrôler le formulaire de création de restaurant
+    **/
     
     checkForm() {
         if($('#restaurantName').val().trim() == "" && $('#restaurantAddress').val().trim() == "") {
@@ -274,6 +342,12 @@ class Maps {
         });
     }
     
+    /** 
+    * Actions qui correspondent à la validation et à l'annulation du formulaire
+    *
+    * @param {object} marker
+    **/
+    
     submitNewRestaurant(marker) {
         this.markers.push(marker);
         
@@ -293,6 +367,10 @@ class Maps {
             e.preventDefault();
         });
     }
+    
+    /** 
+    * Calcule les étoiles à ajouter ou retirer pour les notes
+    **/
     
     addReview() {      
         const rate = [];
@@ -337,6 +415,12 @@ class Maps {
         this.submitForm(rate);
     }
     
+    /** 
+    * Permet d'ajouter un avis (Note + Commentaire)
+    *
+    * @param {number} rate contient le nombre d'étoiles sélectionnées
+    **/
+    
     submitForm(rate) {
         $.each(this.restaurants, (index, value) => {
             const restaurantId = this.restaurants[index].id;
@@ -357,12 +441,18 @@ class Maps {
                 this.restaurants[index].sortByRating();
 
                 document.getElementById("restaurantRate" + restaurantId).textContent = this.restaurants[index].starsAverage;
-
-                $(`#info${restaurantId} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
+                
+                $(`#info${restaurantId} .card-body`).append(`<div>Note : ${rate}</div><div class="breakLine">Commentaire : ${comment}</div>`);
             });
         });
     }
 }
+
+    /** 
+    * Initialise la carte avec l'API Google Maps
+    * Centre la position sur celle de l'utilisateur grâce à un marqueur différent
+    * Le setTimeout permet de charger les avis des restaurants sans avoir un QUERY_OVER_LIMIT car il y a beaucoup de requêtes
+    **/
 
 let map;
 
@@ -403,6 +493,7 @@ function initMap() {
         $("#info").append(`<div class="modal" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false"></div>`);
         
         $('#loadingModal').modal('show');
+        
         $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
         
         setTimeout(() => {

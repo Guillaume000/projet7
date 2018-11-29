@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html class="stretch noPadding">
     <head>
         <title>Projet 7</title>
-        <meta name="viewport" content="initial-scale=1.0">
         <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0">
         <link rel="icon" href="images/favicon.ico">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
         <link rel="stylesheet" href="css/style.css">
     </head>
-    <body>
+    
+    <body class="stretch noPadding">
 
-        <table class="table">
+        <table class="table stretch">
             <tbody>
                 <tr>
-                    <th colspan="4" id="map"></th>
-                    <th scope="col" id="info" class="table-dark">
+                    <th colspan="4" id="map" class="gMap stretch"></th>
+                    <th scope="col" id="info" class="table-dark gInfo text-center">
                         <p>
                             <label for="amount">Filtre par notes</label>
-                            <span type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;"></span>
+                            <span type="text" id="amount" class="gAmount text-center"></span>
                         </p>
-                        <div id="slider-range"></div><br>
-                        <div class="accordion restaurant" id="restaurantAccordion"></div>
+                        <div id="slider-range" class="slider breakLine"></div>
+                        <div id="restaurantAccordion" class="accordion restaurant"></div>
                     </th>
                 </tr>
             </tbody>
@@ -36,5 +37,6 @@
         <script src="js/restaurant.js"></script>
         <script src="js/application.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&libraries=places&callback=initMap" async defer></script>
+        
     </body>
 </html>

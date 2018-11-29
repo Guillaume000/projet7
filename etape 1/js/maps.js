@@ -3,8 +3,14 @@ class Maps {
         this.restaurants = restaurants;
         this.markers = [];
     }
+    
+    /** 
+    * Créer les marqueurs
+    *
+    * @param {object} map détail d'un marqueur
+    **/
 
-    createMarkers(map, markers) {
+    createMarkers(map) {
         $.each(this.restaurants, (index, value) => {
             const marker = new google.maps.Marker({
                 position: new google.maps.LatLng(this.restaurants[index].position),
@@ -33,18 +39,24 @@ class Maps {
         this.clearMarkers();
         this.markers = [];
     }
+    
+    /** 
+    * Affiche les détails des restaurants (Nom, Adresse, Notes, Commentaires)
+    *
+    * @return {tab} array contient un template HTML pour afficher les détails des restaurants
+    **/
 
     displayList() {
         let contentString = "";
         const array = [];
 
         $.each(this.restaurants, (index, value) => {
-            contentString = `<ul><li>${value.name}</li>
+            contentString = `<ul class="noPadding"><li>${value.name}</li>
                              <li>Adresse : ${value.address}</li></ul>`;
 
             for(let i = 0; i < value.ratings.length; i++) {
                 (function(i) {
-                    contentString += (`<ul><li>Notes : ${value.ratings[i].stars}</li>
+                    contentString += (`<ul class="noPadding"><li>Notes : ${value.ratings[i].stars}</li>
                                        <li>Commentaires : ${value.ratings[i].comment}</li></ul>`);
                 })(i)
             }
@@ -52,6 +64,12 @@ class Maps {
         });
         return array;
     }
+    
+    /** 
+    * Affiche les détails des restaurants (Image, contient également la structure HTML pour la méthode displayList)
+    *
+    * @return {tab} array contient un template HTML pour afficher les détails des restaurants
+    **/
 
     createInfoWindow() {
         let imageUrl;
@@ -73,22 +91,25 @@ class Maps {
         });
         return array;
     }
+    
+    /** 
+    * Ajoute les détails des restaurants dans l'élément #restaurantAccordion
+    **/
 
     displayInfoWindow() {
-        let template;
         let infoWindows = this.createInfoWindow();
 
         $.each(this.restaurants, (index, value) => {
+            
             $("#restaurantAccordion").append(`
                 <div class="card">
                   <div class="card-header" id="heading${index}">
                     <h5 class="mb-0">
                     <button id="restaurant${index}" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
-                        Nom du restaurant : ${value.name} ${value.sortByRating()} <i class="fas fa-star"></i><br>
+                        Nom du restaurant : ${value.name} ${value.sortByRating()} <i class="fas fa-star"></i>
                     </button>
                     </h5>
                   </div>
-
                   <div id="collapse${index}" class="collapse" aria-labelledby="heading${index}" data-parent="#restaurantAccordion">
                     <div id="info${index}" class="card-body">
                       ${infoWindows[index].content}
@@ -96,10 +117,15 @@ class Maps {
                   </div>
                 </div>
             `);
+            
         });
-        return template;
     }
 }
+
+    /** 
+    * Initialise la carte avec l'API Google Maps
+    * Centre la position sur celle de l'utilisateur grâce à un marqueur différent
+    **/
 
 function initMap() {
     let map;

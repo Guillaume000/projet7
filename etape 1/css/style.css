@@ -1,16 +1,12 @@
 html, body {
-    height: 100%;
     margin: 0;
-    padding: 0;
 }
 
 ul {
     list-style: none;
-    padding: 0;
 }
 
 .table {
-    height: 100%;
     margin-bottom: 0;
 }
 
@@ -19,15 +15,30 @@ ul {
     color: #007bff;
 }
 
-#map {
+.gInfo {
+    width: 20%;
+}
+
+.gAmount {
+    border: 0; 
+    color: #f6931f; 
+    font-weight: bold;
+}
+
+/** HELPERS **/
+
+.text-center {
+    text-align: center;
+}
+
+.stretch {
     height: 100%;
 }
 
-#info {
-    width: 20%;
-    text-align: center;
+.noPadding {
+    padding: 0;
 }
 
-#amount {
-    text-align: center;
+.breakLine {
+    margin-bottom: 16px;
 }

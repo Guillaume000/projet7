@@ -5,7 +5,13 @@ class Maps {
         this.markers = [];
     }
     
-    createMarkers(map, markers) {
+    /** 
+    * Créer les marqueurs des restaurants existants
+    *
+    * @param {object} map détail d'un marqueur
+    **/
+    
+    createMarkers(map) {        
         $.each(this.restaurants, (index, value) => {
             const marker = new google.maps.Marker({
                 position: new google.maps.LatLng(this.restaurants[index].position),
@@ -34,6 +40,13 @@ class Maps {
         this.clearMarkers();
         this.markers = [];
     }
+    
+    /** 
+    * Créer le marqueur d'un nouveau restaurant
+    *
+    * @param {object} location = latitude et longitude d'un marqueur
+    * @param {object} map correspond à la carte pour pouvoir placer les marqueurs
+    **/
 
     addMarker(location, map) {
         const marker = new google.maps.Marker({
@@ -45,11 +58,17 @@ class Maps {
 
         this.submitNewRestaurant(marker);
         this.addReview();
+        
         $('#rateComment').html(this.addComment(this.restaurants.length));
+        
         $('#newRestaurant').modal('show');
     }
+    
+    /** 
+    * Annule le formulaire pour ajouter un nouveau restaurant (annule également son marqueur)
+    **/
 
-    cancelForm(marker) {      
+    cancelForm() {      
         $.each(this.markers, function(index, value) {  
             value.setVisible(false);
         });
@@ -63,15 +82,25 @@ class Maps {
         this.removeModal();
     }
 
+    /** 
+    * Valide la création d'un nouveau marqueur et d'un nouveau restaurant
+    *
+    * @param {object} event = latitude et longitude d'un marqueur
+    **/
+    
     validForm(event) {     
         const nextRestaurant = new Restaurant();
+        
         const starValue = $("#stars .selected");
+        
         let comment;
         let json;
         let object;
 
         nextRestaurant.name = $("#restaurantName").val();
+        
         nextRestaurant.address = $("#restaurantAddress").val();
+        
         nextRestaurant.position = {"lat":event.lat(), "lng":event.lng()};
         nextRestaurant.pic = `https://maps.googleapis.com/maps/api/streetview?key=AIzaSyBuZW2mvBkazbPnl_jg_t5G5ilZmzhJfhU&size=400x400&location=${nextRestaurant.position}&fov=90&heading=235&pitch=10`;
 
@@ -106,7 +135,8 @@ class Maps {
         this.newRestaurants.push(nextRestaurant);            
         this.restaurants.push(nextRestaurant);
 
-        $(".card").remove();       
+        $(".card").remove();  
+        
         this.displayInfoWindow();
         this.toggleRestaurant();            
         this.removeModal();
@@ -124,18 +154,24 @@ class Maps {
             });
         });
     }
+    
+    /** 
+    * Affiche les détails des restaurants (Nom, Adresse, Notes, Commentaires)
+    *
+    * @return {tab} array contient un template HTML pour afficher les détails des restaurants
+    **/
 
     displayList() {
         let contentString = "";
         const array = [];
 
         $.each(this.restaurants, (index, value) => {
-            contentString = `<ul><li>${value.name}</li>
+            contentString = `<ul class="noPadding"><li>${value.name}</li>
                              <li>Adresse : ${value.address}</li></ul>`;
 
             for(let i = 0; i < value.ratings.length; i++) {
                 (function(i) {
-                    contentString += (`<ul><li>Note : ${value.ratings[i].stars}</li>
+                    contentString += (`<ul class="noPadding"><li>Note : ${value.ratings[i].stars}</li>
                                        <li>Commentaire : ${value.ratings[i].comment}</li></ul>`);
                 })(i)
             }
@@ -143,6 +179,12 @@ class Maps {
         });
         return array;
     }
+    
+    /** 
+    * Affiche les détails des restaurants (Image, contient également la structure HTML pour la méthode displayList)
+    *
+    * @return {tab} array contient un template HTML pour afficher les détails des restaurants
+    **/
 
     createInfoWindow() {
         let imageUrl;
@@ -164,17 +206,22 @@ class Maps {
         });
         return array;
     }
+    
+    /** 
+    * Ajoute les détails des restaurants dans l'élément #restaurantAccordion
+    **/
 
     displayInfoWindow() {
         const infoWindows = this.createInfoWindow();
 
         $.each(this.restaurants, (index, value) => {
+            
             $("#restaurantAccordion").append(`
                 <div class="card">
                   <div class="card-header" id="heading${index}">
                     <h5 class="mb-0">
                     <button id="restaurant${index}" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
-                        Nom du restaurant : ${value.name} ${value.sortByRating()} <i class="fas fa-star"></i><br>
+                        Nom du restaurant : ${value.name} ${value.sortByRating()} <i class="fas fa-star"></i>
                     </button>
                     </h5>
                   </div>
@@ -210,14 +257,19 @@ class Maps {
                   </div>
                 </div>
             `);
+            
         });
     }
+    
+    /** 
+    * Template HTML qui permet d'ajouter des notes sous forme d'étoiles
+    **/
     
     addStars() {
         return `
             <form id="starsForm">
               <div class='rating-stars text-center'>
-                <ul id='stars' class="restaurantRatings">
+                <ul id='stars' class="restaurantRatings noPadding">
                   <li class='star selected' data-value='1'>
                     <i class='fa fa-star fa-fw'></i>
                   </li>
@@ -239,12 +291,23 @@ class Maps {
         `;
     }
     
+    /** 
+    * Retourne un textarea pour ajouter un commentaire
+    *
+    * @param {number} id
+    * @return {template} 
+    **/
+    
     addComment(id) {        
         return `
             <label for="formControlTextarea${id}">Commentaire :</label>
             <textarea class="form-control" id="formControlTextarea${id}" rows="3"></textarea>
         `;
     }
+    
+    /** 
+    * Formulaire pour ajouter un nouveau restaurant
+    **/
 
     newRestaurantForm() {        
         return `
@@ -264,6 +327,10 @@ class Maps {
             </form>
         `;
     }
+    
+    /** 
+    * Permet de contrôler le formulaire de création de restaurant
+    **/
     
     checkForm() {
         if($('#restaurantName').val().trim() == "" && $('#restaurantAddress').val().trim() == "") {
@@ -294,6 +361,12 @@ class Maps {
             }
         });
     }
+    
+    /** 
+    * Actions qui correspondent à la validation et à l'annulation du formulaire
+    *
+    * @param {object} marker
+    **/
 
     submitNewRestaurant(marker) {
         this.markers.push(marker);
@@ -314,6 +387,10 @@ class Maps {
             e.preventDefault();
         });
     }
+    
+    /** 
+    * Calcule les étoiles à ajouter ou retirer pour les notes
+    **/
 
     addReview() {      
         const rate = [];
@@ -357,6 +434,12 @@ class Maps {
 
         this.submitForm(rate);
     }
+    
+    /** 
+    * Permet d'ajouter un avis (Note + Commentaire)
+    *
+    * @param {number} rate contient le nombre d'étoiles sélectionnées
+    **/
 
     submitForm(rate) {
         for(let k = 0; k < this.restaurants.length; k++) {
@@ -376,11 +459,16 @@ class Maps {
                 this.restaurants[k].ratings.push(object);
                 this.restaurants[k].sortByRating();
                 
-                $(`#info${k} .card-body`).append(`Note : ${rate} <br> Commentaire : ${comment} <br><br>`);
+                $(`#info${k} .card-body`).append(`<div>Note : ${rate}</div><div class="breakLine">Commentaire : ${comment}</div>`);
             });
         }
     }
 }
+
+    /** 
+    * Initialise la carte avec l'API Google Maps
+    * Centre la position sur celle de l'utilisateur grâce à un marqueur différent
+    **/
 
 function initMap() {
     let map;

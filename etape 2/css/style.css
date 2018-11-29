@@ -1,16 +1,12 @@
 html, body {
-    height: 100%;
     margin: 0;
-    padding: 0;
 }
 
 ul {
     list-style: none;
-    padding: 0;
 }
 
 .table {
-    height: 100%;
     margin-bottom: 0;
 }
 
@@ -19,43 +15,53 @@ ul {
     color: #007bff;
 }
 
-#map {
-    height: 100%;
-}
-
-#info {
+.gInfo {
     width: 20%;
-    text-align: center;
 }
 
-#amount {
-    text-align: center;
+.gAmount {
+    border: 0; 
+    color: #f6931f; 
+    font-weight: bold;
 }
 
 .rating-stars ul {
-    list-style-type:none;
-    padding:0;
-    -moz-user-select:none;
-    -webkit-user-select:none;
+    list-style-type: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }
 
 .rating-stars ul > li.star {
-    display:inline-block;
+    display: inline-block;
 }
 
 .rating-stars ul > li.star > i.fa {
-    font-size:2.5em;
-    color:#ccc;
+    font-size: 2.5em;
+    color: #ccc;
 }
 
 .rating-stars ul > li.star.hover > i.fa {
-    color:#FFCC36;
+    color: #FFCC36;
 }
 
 .rating-stars ul > li.star.selected > i.fa {
-    color:#FF912C;
+    color: #FF912C;
 }
 
+/** HELPERS **/
 
+.text-center {
+    text-align: center;
+}
 
+.stretch {
+    height: 100%;
+}
 
+.noPadding {
+    padding: 0;
+}
+
+.breakLine {
+    margin-bottom: 16px;
+}
