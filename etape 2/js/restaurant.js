@@ -9,7 +9,7 @@ class Restaurant {
     }
 
     /** 
-    * Calcule la moyenne des notes d'un restaurant
+    * Calculates the average of restaurant ratings
     *
     * @return {number} this.starsAverage
     **/

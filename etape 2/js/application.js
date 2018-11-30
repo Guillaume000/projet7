@@ -4,10 +4,10 @@ class Application {
     }
 
     /** 
-    * Récupère la liste des restaurants
+    * get the list of restaurants
     *
-    * @param {string} url l'adresse pour récupérer les restaurants
-    * @param {tab} list le tableau qui contient la liste de restaurants
+    * @param {string} url address for get the list of restaurants
+    * @param {tab} list array the table that contains the list of restaurants
     *
     * @return {tab} 
     **/
@@ -38,10 +38,10 @@ class Application {
     }
     
     /** 
-    * Filtre les restaurants sur la carte et dans la liste grâce aux notes
+    * Filter the restaurants on the map and list with notes
     *
-    * @param {object} readMap la carte qui contient les marqueurs
-    * @param {object} map permet de récupérer la liste des restaurants pour la localisation
+    * @param {object} readMap the map that contains the markers
+    * @param {object} map retrieves the list of restaurants for localization
     **/
 
     clickStars(map, markers) {

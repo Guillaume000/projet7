@@ -6,10 +6,10 @@ class Maps {
     }
     
     /** 
-    * Créer le marqueur d'un nouveau restaurant
+    * Create marker for a new restaurant
     *
-    * @param {object} location = latitude et longitude d'un marqueur
-    * @param {object} map correspond à la carte pour pouvoir placer les marqueurs
+    * @param {object} location = latitude and longitude
+    * @param {object} map is for place the markers
     **/
 
     addMarker(location, map) {
@@ -29,7 +29,7 @@ class Maps {
     }
     
     /** 
-    * Annule le formulaire pour ajouter un nouveau restaurant (annule également son marqueur)
+    * Cancel form (cancel marker too)
     **/
     
     cancelForm() {          
@@ -47,7 +47,7 @@ class Maps {
     }
     
     /** 
-    * Valide la création d'un nouveau marqueur et d'un nouveau restaurant
+    * Valid creation of new marker and new restaurant
     *
     * @param {object} event = latitude et longitude d'un marqueur
     **/
@@ -119,11 +119,11 @@ class Maps {
     }
     
     /** 
-    * Affiche les détails d'un restaurant (Nom, Adresse, Notes, Commentaires)
+    * display restaurant's details (name, address, notes, comments)
     *
-    * @param {object} element = un restaurant
+    * @param {object} element = restaurant
     *
-    * @return {template} contentString contient un template HTML pour afficher les détails d'un restaurant
+    * @return {template} contentString contains template for display restaurant's details
     **/
     
     createRestaurant(element) {
@@ -145,9 +145,9 @@ class Maps {
     }
     
     /** 
-    * Ajoute les restaurants dans un tableau pour pouvoir les afficher plus tard
+    * add restaurant in array for display
     *
-    * @return {tab} array tableau qui contient les restaurants
+    * @return {tab} array contains restaurants
     **/
     
     displayList() {
@@ -161,9 +161,9 @@ class Maps {
     }
     
     /** 
-    * Affiche les détails des restaurants (Image, contient également la structure HTML pour la méthode displayList)
+    * display restaurant's details (pic with template for displayList)
     *
-    * @return {tab} array contient un template HTML pour afficher les détails des restaurants
+    * @return {tab} array contains template for display restaurant's details
     **/
 
     createInfoWindow() {
@@ -188,7 +188,7 @@ class Maps {
     }
     
     /** 
-    * Ajoute les détails des restaurants dans l'élément #restaurantAccordion
+    * Add restaurant's details in #restaurantAccordion
     **/
 
     displayInfoWindow() {
@@ -242,7 +242,7 @@ class Maps {
     }
     
     /** 
-    * Template HTML qui permet d'ajouter des notes sous forme d'étoiles
+    * Template for add note with stars
     **/
     
     addStars() {
@@ -272,7 +272,7 @@ class Maps {
     }
     
     /** 
-    * Retourne un textarea pour ajouter un commentaire
+    * textarea for add a comment
     *
     * @param {number} id
     * @return {template} 
@@ -286,7 +286,7 @@ class Maps {
     }
     
     /** 
-    * Formulaire pour ajouter un nouveau restaurant
+    * form for add a new restaurant
     **/
     
     newRestaurantForm() {          
@@ -309,7 +309,7 @@ class Maps {
     }
     
     /** 
-    * Permet de contrôler le formulaire de création de restaurant
+    * control restaurant's form
     **/
     
     checkForm() {
@@ -343,7 +343,7 @@ class Maps {
     }
     
     /** 
-    * Actions qui correspondent à la validation et à l'annulation du formulaire
+    * actions for valid and cancel form
     *
     * @param {object} marker
     **/
@@ -369,7 +369,7 @@ class Maps {
     }
     
     /** 
-    * Calcule les étoiles à ajouter ou retirer pour les notes
+    * Calculates stars to add or remove notes
     **/
     
     addReview() {      
@@ -416,9 +416,9 @@ class Maps {
     }
     
     /** 
-    * Permet d'ajouter un avis (Note + Commentaire)
+    * add a review (note + comment)
     *
-    * @param {number} rate contient le nombre d'étoiles sélectionnées
+    * @param {number} rate contains selected stars
     **/
     
     submitForm(rate) {
@@ -447,11 +447,11 @@ class Maps {
         });
     }
 }
-
+    
     /** 
-    * Initialise la carte avec l'API Google Maps
-    * Centre la position sur celle de l'utilisateur grâce à un marqueur différent
-    * Le setTimeout permet de charger les avis des restaurants sans avoir un QUERY_OVER_LIMIT car il y a beaucoup de requêtes
+    * initialize map with Google Maps API
+    * Center the position on user with a different marker
+    * setTimeout loads review's restaurants without QUERY_OVER_LIMIT because there is many requests
     **/
 
 let map;

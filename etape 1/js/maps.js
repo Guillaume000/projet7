@@ -5,9 +5,9 @@ class Maps {
     }
     
     /** 
-    * Créer les marqueurs
+    * Create markers
     *
-    * @param {object} map détail d'un marqueur
+    * @param {object} map marker details
     **/
 
     createMarkers(map) {
@@ -41,9 +41,9 @@ class Maps {
     }
     
     /** 
-    * Affiche les détails des restaurants (Nom, Adresse, Notes, Commentaires)
+    * display restaurant's details (Nom, Adresse, Notes, Commentaires)
     *
-    * @return {tab} array contient un template HTML pour afficher les détails des restaurants
+    * @return {tab} array contains template for display restaurant's details
     **/
 
     displayList() {
@@ -66,9 +66,9 @@ class Maps {
     }
     
     /** 
-    * Affiche les détails des restaurants (Image, contient également la structure HTML pour la méthode displayList)
+    * display restaurant's details (pic with template for displayList)
     *
-    * @return {tab} array contient un template HTML pour afficher les détails des restaurants
+    * @return {tab} array contains template for display restaurant's details
     **/
 
     createInfoWindow() {
@@ -93,7 +93,7 @@ class Maps {
     }
     
     /** 
-    * Ajoute les détails des restaurants dans l'élément #restaurantAccordion
+    * Add restaurant's details in #restaurantAccordion
     **/
 
     displayInfoWindow() {
@@ -123,8 +123,8 @@ class Maps {
 }
 
     /** 
-    * Initialise la carte avec l'API Google Maps
-    * Centre la position sur celle de l'utilisateur grâce à un marqueur différent
+    * initialize map with Google Maps API
+    * Center the position on user with a different marker
     **/
 
 function initMap() {
