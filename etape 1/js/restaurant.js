@@ -13,7 +13,6 @@ class Restaurant {
     *
     * @return {number} this.starsAverage
     **/
-
     sortByRating() {
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         const stockRate = [];

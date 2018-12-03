@@ -11,7 +11,6 @@ class Maps {
     * @param {object} location = latitude and longitude
     * @param {object} map is for place the markers
     **/
-
     addMarker(location, map) {
         const marker = new google.maps.Marker({
             position: location,
@@ -31,7 +30,6 @@ class Maps {
     /** 
     * Cancel form (cancel marker too)
     **/
-    
     cancelForm() {          
         $.each(this.markers, function(index, value) {  
             value.setVisible(false);
@@ -51,7 +49,6 @@ class Maps {
     *
     * @param {object} event = latitude et longitude d'un marqueur
     **/
-    
     validForm(event) {     
         const nextRestaurant = new Restaurant();
         const starValue = $("#stars .selected");
@@ -106,10 +103,16 @@ class Maps {
         this.addReview();
     }
     
+    /** 
+    * erase modal
+    **/
     removeModal() {
         $("#newRestaurant").modal('hide').remove();
     }
     
+    /** 
+    * toggle a restaurant when you click on it
+    **/
     toggleRestaurant() {
         $.each(this.restaurants, (index, value) => {
             value.marker.addListener('click', () => {
@@ -125,7 +128,6 @@ class Maps {
     *
     * @return {template} contentString contains template for display restaurant's details
     **/
-    
     createRestaurant(element) {
         let contentString = "";
         
@@ -149,7 +151,6 @@ class Maps {
     *
     * @return {tab} array contains restaurants
     **/
-    
     displayList() {
         const array = [];
 
@@ -165,7 +166,6 @@ class Maps {
     *
     * @return {tab} array contains template for display restaurant's details
     **/
-
     createInfoWindow() {
         let imageUrl;
         let infoWindow;
@@ -190,7 +190,6 @@ class Maps {
     /** 
     * Add restaurant's details in #restaurantAccordion
     **/
-
     displayInfoWindow() {
         const infoWindows = this.createInfoWindow();
 
@@ -244,7 +243,6 @@ class Maps {
     /** 
     * Template for add note with stars
     **/
-    
     addStars() {
         return `
             <form id="starsForm">
@@ -277,7 +275,6 @@ class Maps {
     * @param {number} id
     * @return {template} 
     **/
-    
     addComment(id) {        
         return `
             <label for="formControlTextarea${id}">Commentaire :</label>
@@ -288,7 +285,6 @@ class Maps {
     /** 
     * form for add a new restaurant
     **/
-    
     newRestaurantForm() {          
         return `
             <div class="modal-body jumbotron">
@@ -311,7 +307,6 @@ class Maps {
     /** 
     * control restaurant's form
     **/
-    
     checkForm() {
         if($('#restaurantName').val().trim() == "" && $('#restaurantAddress').val().trim() == "") {
             $('#validRestaurant').prop('disabled', true);
@@ -347,7 +342,6 @@ class Maps {
     *
     * @param {object} marker
     **/
-    
     submitNewRestaurant(marker) {
         this.markers.push(marker);
         
@@ -371,7 +365,6 @@ class Maps {
     /** 
     * Calculates stars to add or remove notes
     **/
-    
     addReview() {      
         const rate = [];
         
@@ -420,7 +413,6 @@ class Maps {
     *
     * @param {number} rate contains selected stars
     **/
-    
     submitForm(rate) {
         $.each(this.restaurants, (index, value) => {
             const restaurantId = this.restaurants[index].id;
@@ -448,12 +440,11 @@ class Maps {
     }
 }
     
-    /** 
-    * initialize map with Google Maps API
-    * Center the position on user with a different marker
-    * setTimeout loads review's restaurants without QUERY_OVER_LIMIT because there is many requests
-    **/
-
+/** 
+* initialize map with Google Maps API
+* Center the position on user with a different marker
+* setTimeout loads review's restaurants without QUERY_OVER_LIMIT because there is many requests
+**/
 let map;
 
 function initMap() {
@@ -494,7 +485,7 @@ function initMap() {
         
         $('#loadingModal').modal('show');
         
-        $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse" id="loadingSpin"></i><div id="loadingMessage">Chargement en cours ...</div>`);
+        $("#loadingModal").append(`<i class="fa fa-spinner fa-5x fa-pulse marginSpin" id="loadingSpin"></i><div id="loadingMessage" class="marginMessage">Chargement en cours ...</div>`);
         
         setTimeout(() => {
             readMap.displayInfoWindow();

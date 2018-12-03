@@ -48,11 +48,11 @@ ul {
     color: #FF912C;
 }
 
-#loadingMessage {
+.marginMessage {
     margin-top: 20px;
 }
 
-#loadingSpin {
+.marginSpin {
     margin-top: 320px;
 }
 

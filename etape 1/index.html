@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="stretch noPadding">
+<html lang=fr class="stretch noPadding">
     <head>
         <title>Projet 7</title>
         <meta charset="utf-8">
@@ -13,14 +13,15 @@
     
     <body class="stretch noPadding">
 
+        <!-- On the page, map occupies 2/3 (left) and the list of restaurants 1/3 (right) -->
         <table class="table stretch">
             <tbody>
                 <tr>
-                    <th colspan="4" id="map" class="gMap stretch"></th>
+                    <th id="map" class="gMap stretch"></th>
                     <th scope="col" id="info" class="table-dark gInfo text-center">
                         <p>
-                            <label for="amount">Filtre par notes</label>
-                            <span type="text" id="amount" class="gAmount text-center"></span>
+                            <label>Filtre par notes</label>
+                            <span id="amount" class="gAmount text-center"></span>
                         </p>
                         <div id="slider-range" class="slider breakLine"></div>
                         <div id="restaurantAccordion" class="accordion restaurant"></div>

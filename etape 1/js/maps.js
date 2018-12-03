@@ -9,7 +9,6 @@ class Maps {
     *
     * @param {object} map marker details
     **/
-
     createMarkers(map) {
         $.each(this.restaurants, (index, value) => {
             const marker = new google.maps.Marker({
@@ -25,16 +24,25 @@ class Maps {
         });
     }
 
+    /** 
+    * select all markers
+    **/
     setMapOnAll(map) {
         for (var i = 0; i < this.markers.length; i++) {
             this.markers[i].setMap(map);
         }
     }
 
+    /** 
+    * delete all markers on the map
+    **/
     clearMarkers() {
         this.setMapOnAll(null);
     }
 
+    /** 
+    * delete all markers on the tab
+    **/
     deleteMarkers() {
         this.clearMarkers();
         this.markers = [];
@@ -45,7 +53,6 @@ class Maps {
     *
     * @return {tab} array contains template for display restaurant's details
     **/
-
     displayList() {
         let contentString = "";
         const array = [];
@@ -70,7 +77,6 @@ class Maps {
     *
     * @return {tab} array contains template for display restaurant's details
     **/
-
     createInfoWindow() {
         let imageUrl;
         let infoWindow;
@@ -95,7 +101,6 @@ class Maps {
     /** 
     * Add restaurant's details in #restaurantAccordion
     **/
-
     displayInfoWindow() {
         let infoWindows = this.createInfoWindow();
 
@@ -122,11 +127,10 @@ class Maps {
     }
 }
 
-    /** 
-    * initialize map with Google Maps API
-    * Center the position on user with a different marker
-    **/
-
+/** 
+* initialize map with Google Maps API
+* Center the position on user with a different marker
+**/
 function initMap() {
     let map;
     let app;

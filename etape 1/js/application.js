@@ -11,7 +11,6 @@ class Application {
     *
     * @return {tab} 
     **/
-
     getRestaurants(url, ...list) {
         $.ajax({
             url: url,
@@ -43,7 +42,6 @@ class Application {
     * @param {object} readMap the map that contains the markers
     * @param {object} map retrieves the list of restaurants for localization
     **/
-
     clickStars(map, markers) {
         const list = this.listRestaurants;
         let average;

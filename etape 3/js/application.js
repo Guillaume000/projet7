@@ -13,7 +13,6 @@ class Application {
     * @param {tab} results contains the list of restaurants
     * @param {string} status indicates the status of the request
     **/
-    
     getRestaurantsFromPlaces(results, status) {
         const loaded = new Event("restaurantLoaded", {bubbles:true});
         
@@ -45,10 +44,16 @@ class Application {
         document.dispatchEvent(loaded);
     }
     
+    /** 
+    * create markers for each restaurants
+    **/
     callBack() {
         this.listRestaurants.forEach(this.createMarker);
     }
 
+    /** 
+    * create marker and toggle if you click him
+    **/
     createMarker(place, results) {
         place.marker = new google.maps.Marker({
             map: map,
@@ -66,7 +71,6 @@ class Application {
     * @param {object} readMap the map that contains the markers
     * @param {object} map retrieves the list of restaurants for localization
     **/
-
     clickStars(readMap, map) {
         const list = this.listRestaurants;
         
